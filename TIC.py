@@ -1,7 +1,6 @@
-#Importar librerias
-import pandas as pd
-import numpy as np
-
-#Definir la ruta
-data = pd.read_csv('./data.csv')
-
+#Condicionales
+numero = int(input("Digite su numero"))
+if numero>0:
+     print("El numero es positivo")
+    
+print("Fin del programa")
