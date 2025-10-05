@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>🔐 Detección de Malware</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>🔍 Prototipo de Detección de Malware</h1>
+
+    <form method="POST" action="/predict" enctype="multipart/form-data">
+        <label>Sube tu dataset (.csv):</label>
+        <input type="file" name="dataset" accept=".csv" required>
+        <button type="submit">Ejecutar predicción</button>
+    </form>
+
+    {% if results %}
+    <h2>📊 Resultados de la Predicción</h2>
+    {{ results | safe }}
+    {% endif %}
+
+    {% if report %}
+    <h2>📈 Métricas del Modelo</h2>
+    <pre>{{ report }}</pre>
+    {% endif %}
+</body>
+</html>
