@@ -1,0 +1,23 @@
+# Entorno virtual
+env/
+
+# Archivos de configuración locales
+*.pyc
+__pycache__/
+.DS_Store
+
+# Archivos de datos temporales
+uploads/
+*.csv
+
+# Archivos de modelo pesados (opcional)
+*.pkl
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Archivos de logs
+*.log
+
+# Archivos del entorno de VSCode
+.vscode/
