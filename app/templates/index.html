@@ -4,24 +4,129 @@
     <meta charset="UTF-8">
     <title>🔐 Detección de Malware</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Chart.js para el gauge -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <h1>🔍 Prototipo de Detección de Malware</h1>
 
+    <!-- FORMULARIO DE SUBIDA -->
     <form method="POST" action="/predict" enctype="multipart/form-data">
         <label>Sube tu dataset (.csv):</label>
         <input type="file" name="dataset" accept=".csv" required>
         <button type="submit">Ejecutar predicción</button>
     </form>
 
+    <!-- PANEL PRINCIPAL DE RESULTADO -->
+    {% if clase_dominante %}
+    <div class="panel">
+        <h2>🧠 Resultado del Análisis</h2>
+        <div class="card">
+            
+            <!-- Panel izquierdo -->
+            <div class="left">
+                <h3 class="alert">{{ clase_dominante }}</h3>
+                
+
+                <!-- Canvas con atributos usados por gauge.js -->
+                 <div class="gauge-container">
+                    <canvas id="gaugeChart"
+                            data-confianza="{{ confianza_promedio|default(0) }}"
+                            data-clase="{{ clase_dominante|default('') }}"
+                            width="250" height="150"></canvas>
+                 </div>
+                <!-- <h1>{{ confianza_promedio }}%</h1>-->
+                <p>Confianza promedio del modelo</p>
+                
+                {% if precision %}
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <p>Precisión</p>
+                        <h3>{{ precision }}%</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>Recall</p>
+                        <h3>{{ recall }}%</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>F1-Score</p>
+                        <h3>{{ f1_score }}%</h3>
+                    </div>
+                </div>
+                {% endif %}
+                <p><b>Clase dominante:</b> {{ clase_dominante }} ({{ porcentaje_dominante }}%)</p>
+                <p><b>Tiempo de análisis:</b> {{ tiempo_analisis }} segundos</p>
+                <p><b>Fecha:</b> {{ fecha_analisis }}</p>
+            </div>
+
+            <!-- Panel derecho -->
+            <div class="right">
+                <h4>Distribución de clases:</h4>
+                <ul>
+                    {% for clase, porcentaje in porcentajes.items() %}
+                        <li><b>{{ clase }}:</b> {{ porcentaje }}%</li>
+                    {% endfor %}
+                </ul>
+                <img src="data:image/png;base64,{{ dist_image }}" width="300">
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- RESULTADOS Y MÉTRICAS -->
     {% if results %}
-    <h2>📊 Resultados de la Predicción</h2>
-    {{ results | safe }}
+        <h2>📊 Resultados de la Predicción</h2>
+        {{ results | safe }}
     {% endif %}
 
     {% if report %}
-    <h2>📈 Métricas del Modelo</h2>
-    <pre>{{ report }}</pre>
+        <h2>📈 Métricas del Modelo</h2>
+        <pre>{{ report }}</pre>
     {% endif %}
+
+    {% if cm_image %}
+        <h2>📊 Matriz de Confusión</h2>
+        <img src="data:image/png;base64,{{ cm_image }}" alt="Matriz de Confusión" width="450">
+    {% endif %}
+
+    {% if roc_image %}
+        <h2>📈 Curva ROC por Clase</h2>
+        <img src="data:image/png;base64,{{ roc_image }}" alt="Curva ROC" width="500">
+    {% endif %}
+
+    {% if fecha_analisis %}
+        <h2>🕒 Información del Análisis</h2>
+        <p><b>Fecha y hora del análisis:</b> {{ fecha_analisis }}</p>
+        <p><b>Tiempo de predicción:</b> {{ tiempo_analisis }} segundos</p>
+
+        <h3>📊 Distribución de Clases</h3>
+        <ul>
+        {% for clase, porcentaje in porcentajes.items() %}
+            <li><b>{{ clase }}:</b> {{ porcentaje }}%</li>
+        {% endfor %}
+        </ul>
+        <img src="data:image/png;base64,{{ dist_image }}" alt="Distribución de Predicciones" width="400">
+    {% endif %}
+
+    {% if prob_image %}
+        <h2>🎯 Probabilidades por Muestra</h2>
+        <p>Gráfico que muestra la probabilidad estimada de cada clase para las primeras 10 muestras analizadas.</p>
+        <img src="data:image/png;base64,{{ prob_image }}" alt="Probabilidades de Predicción" width="700">
+    {% endif %}
+
+    <hr>
+    <h3>🧠 Interpretación de Resultados</h3>
+    <p>El modelo analiza los archivos y clasifica su nivel de riesgo:</p>
+    <ul>
+        <li><b>Benign:</b> Archivos seguros sin comportamiento malicioso.</li>
+        <li><b>Ransomware:</b> Software que cifra archivos y exige rescate.</li>
+        <li><b>Trojan:</b> Programa que aparenta ser legítimo pero permite el acceso remoto.</li>
+    </ul>
+    <p>Una alta proporción de <b>Ransomware</b> o <b>Trojan</b> indica posible compromiso del sistema. 
+    Se recomienda aislar los archivos identificados y realizar un análisis forense adicional.</p>
+
+    <!-- 🔹 Enlazar el archivo gauge.js -->
+    <script src="{{ url_for('static', filename='gauge.js') }}"></script>
 </body>
 </html>
