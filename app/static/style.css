@@ -90,3 +90,28 @@ li {
     color: #ffffff;
     font-size: 20px;
 }
+
+.analysis-card {
+    background-color: #1e1f25;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+.analysis-card h4 {
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.analysis-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 10px 0;
+}
+
+.analysis-card li {
+    color: #ccc;
+    margin: 3px 0;
+}
