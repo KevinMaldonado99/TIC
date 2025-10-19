@@ -64,7 +64,7 @@ def predict():
     X = X[columnas_modelo]
 
     # -------------------------
-    # Predicciones globales
+    # Predicciones
     # -------------------------
     y_pred = model.predict(X)
     y_pred_labels = label_encoder.inverse_transform(y_pred)
@@ -103,6 +103,16 @@ def predict():
     confianza_promedio = round(float(np.mean(confidencias)) * 100, 2)
 
     # -------------------------
+    # 📈 Métricas de la predicción actual
+    # -------------------------
+    malware_preds = sum([1 for c in y_pred_labels if c != "Benign"])
+    total_preds = len(y_pred_labels)
+
+    precision = round(confianza_promedio, 2)
+    recall = round((malware_preds / total_preds) * 100, 2) if total_preds > 0 else 0
+    f1_score = round((2 * precision * recall) / (precision + recall), 2) if (precision + recall) > 0 else 0
+
+    # -------------------------
     # 🧠 LIME - Explicación local
     # -------------------------
     try:
@@ -113,8 +123,7 @@ def predict():
             discretize_continuous=True
         )
 
-        # Tomar una muestra representativa (por ejemplo, la primera del CSV)
-        muestra = X.iloc[0].values
+        muestra = X.iloc[0].values  # Primera muestra representativa
         exp = explainer.explain_instance(
             muestra,
             model.predict_proba,
@@ -122,7 +131,6 @@ def predict():
             top_labels=1
         )
 
-        # Extraer características más influyentes de esa explicación
         lime_exp = exp.as_list(label=list(clases).index(y_pred_labels[0]))
         top_features = []
         for nombre, valor in lime_exp:
@@ -131,7 +139,6 @@ def predict():
                 "Importancia": abs(valor)
             })
 
-        # Normalizar a porcentaje
         total = sum([f["Importancia"] for f in top_features])
         for f in top_features:
             f["Importancia"] = round(f["Importancia"] / total * 100, 2)
@@ -155,7 +162,10 @@ def predict():
         porcentajes=porcentajes.to_dict(),
         dist_image=dist_image,
         top_features=top_features,
-        file_hash=file_hash
+        file_hash=file_hash,
+        precision=precision,
+        recall=recall,
+        f1_score=f1_score
     )
 
 if __name__ == "__main__":

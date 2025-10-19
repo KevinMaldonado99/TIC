@@ -32,6 +32,24 @@
 
                 <p>Confianza promedio del modelo</p>
 
+                {% if precision %}
+                <div class="metrics-row">
+                    <div class="metric-card">
+                        <p>Precisión</p>
+                        <h3>{{ '%.2f'|format(precision) }}%</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>Recall</p>
+                        <h3>{{ '%.2f'|format(recall) }}%</h3>
+                    </div>
+                    <div class="metric-card">
+                        <p>F1-Score</p>
+                        <h3>{{ '%.2f'|format(f1_score) }}%</h3>
+                    </div>
+                </div>
+                {% endif %}
+
+
                 {% if top_features %}
                 <div class="analysis-card">
                     <h4>Características más influyentes:</h4>
