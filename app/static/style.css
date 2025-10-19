@@ -1,0 +1,117 @@
+body {
+    background-color: #0d1117;
+    color: #f0f6fc;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+}
+
+.panel {
+    background-color: #161b22;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.left, .right {
+    background-color: #1f242b;
+    border-radius: 5px;
+    padding: 35px;
+    width: 35%;
+}
+
+.alert {
+    background-color: #d73a49;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+h1 {
+    font-size: 48px;
+    color: #58a6ff;
+    margin: 10px 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 4px 0;
+}
+.gauge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 1px;
+}
+
+#gaugeChart {
+    width: 200px !important;   /* tamaño horizontal */
+    height: 200px !important;  /* tamaño vertical */
+    display: block;
+    margin: 3 auto;
+}
+
+.metrics-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.metric-card {
+    background-color: #1e1f25;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(255,255,255,0.05);
+    min-width: 90px;
+}
+
+.metric-card p {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+}
+
+.metric-card h3 {
+    margin: 5px 0 0;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.analysis-card {
+    background-color: #1e1f25;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+.analysis-card h4 {
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.analysis-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 10px 0;
+}
+
+.analysis-card li {
+    color: #ccc;
+    margin: 3px 0;
+}
