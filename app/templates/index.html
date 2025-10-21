@@ -30,6 +30,7 @@
             <div class="left">
                 <h3 class="alert 
                     {% if clase_dominante == 'Ransomware' %} alert-danger 
+                    {% elif clase_dominante == 'Desconocido' %} alert-secondary 
                     {% else %} alert-success {% endif %}">
                     {{ clase_dominante }}
                 </h3>
