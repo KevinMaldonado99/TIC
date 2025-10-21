@@ -20,15 +20,15 @@ matplotlib.use('Agg')
 app = Flask(__name__)
 
 # -------------------------
-# Rutas del modelo y encoder
+# Rutas del modelo y encoder (Ransomware vs Benign)
 # -------------------------
-MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under.pkl"
-ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_Under.pkl"
+MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_ramnsomware.pkl"
+ENCODER_PATH = "../app/models/RF UnderSampling/label_E_RF_Under_ramnsomware.pkl"
 
 # Cargar modelo y encoder
 model = joblib.load(MODEL_PATH)
 label_encoder = joblib.load(ENCODER_PATH)
-clases = label_encoder.classes_
+clases = label_encoder.classes_  # ['Benign', 'Ransomware']
 
 @app.route("/")
 def index():
@@ -49,7 +49,7 @@ def predict():
         return f"Error al leer el CSV: {e}"
 
     if "Category" in df.columns:
-        return "⚠️ Este CSV contiene la columna 'Category'. Sube únicamente archivos sin etiquetas para detección real.", 400
+        return "⚠️ Este CSV contiene la columna 'Category'. Sube únicamente archivos sin etiquetas.", 400
 
     start_time = time.time()
     fecha_analisis = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -64,25 +64,57 @@ def predict():
     X = X[columnas_modelo]
 
     # -------------------------
-    # Predicciones
+    # Clasificación (Ransomware / Benign)
     # -------------------------
     y_pred = model.predict(X)
     y_pred_labels = label_encoder.inverse_transform(y_pred)
-    df["Predicción"] = y_pred_labels
-
+    df["Clasificación"] = y_pred_labels
     tiempo_analisis = round(time.time() - start_time, 2)
 
+    # -------------------------
+    # Estadísticas y porcentajes
+    # -------------------------
     pred_counts = pd.Series(y_pred_labels).value_counts()
     porcentajes = (pred_counts / pred_counts.sum() * 100).round(2)
-    clase_dominante = porcentajes.idxmax()
-    porcentaje_dominante = porcentajes.max()
+    clase_dominante = porcentajes.idxmax() if not porcentajes.empty else "Desconocido"
+    porcentaje_dominante = porcentajes.max() if not porcentajes.empty else 0
+
+    # -------------------------
+    # Calcular confianza promedio
+    # -------------------------
+    y_pred_proba = model.predict_proba(X)
+    confidencias = []
+    for i, pred_label in enumerate(y_pred_labels):
+        idx = np.where(clases == pred_label)[0][0]
+        confidencias.append(y_pred_proba[i][idx])
+    confianza_promedio = round(float(np.mean(confidencias)) * 100, 2)
+
+    # -------------------------
+    # ⚠️ Detección de muestras desconocidas (dinámica)
+    # -------------------------
+    if confianza_promedio < 35 or pred_counts.sum() == 0:
+        return render_template(
+            "index.html",
+            clase_dominante="Desconocido",
+            mensaje_error="⚠️ La muestra no coincide con las características conocidas por el modelo (ni Ransomware ni Benigno).",
+            confianza_promedio=confianza_promedio,
+            top_features=[],
+            dist_image=None,
+            porcentajes={},
+            precision=0,
+            recall=0,
+            f1_score=0,
+            file_hash=file_hash,
+            tiempo_analisis=tiempo_analisis,
+            fecha_analisis=fecha_analisis
+        )
 
     # -------------------------
     # Gráfico de distribución
     # -------------------------
     plt.figure(figsize=(5, 4))
-    sns.barplot(x=pred_counts.index, y=pred_counts.values, palette="Set2")
-    plt.title("Distribución de Predicciones por Clase")
+    sns.barplot(x=pred_counts.index, y=pred_counts.values, palette="coolwarm")
+    plt.title("Distribución de Clasificaciones (Ransomware vs Benign)")
     plt.ylabel("Cantidad de muestras")
     plt.xlabel("Clase Predicha")
     plt.tight_layout()
@@ -93,21 +125,10 @@ def predict():
     plt.close()
 
     # -------------------------
-    # Calcular confianza promedio
+    # Métricas simples
     # -------------------------
-    y_pred_proba = model.predict_proba(X)
-    confidencias = []
-    for i, pred_label in enumerate(y_pred_labels):
-        idx = list(clases).index(pred_label)
-        confidencias.append(y_pred_proba[i][idx])
-    confianza_promedio = round(float(np.mean(confidencias)) * 100, 2)
-
-    # -------------------------
-    # 📈 Métricas de la predicción actual
-    # -------------------------
-    malware_preds = sum([1 for c in y_pred_labels if c != "Benign"])
+    malware_preds = sum([1 for c in y_pred_labels if c == "Ransomware"])
     total_preds = len(y_pred_labels)
-
     precision = round(confianza_promedio, 2)
     recall = round((malware_preds / total_preds) * 100, 2) if total_preds > 0 else 0
     f1_score = round((2 * precision * recall) / (precision + recall), 2) if (precision + recall) > 0 else 0
@@ -119,11 +140,11 @@ def predict():
         explainer = LimeTabularExplainer(
             X.values,
             feature_names=columnas_modelo,
-            class_names=clases,
+            class_names=list(clases),
             discretize_continuous=True
         )
 
-        muestra = X.iloc[0].values  # Primera muestra representativa
+        muestra = X.iloc[0].values
         exp = explainer.explain_instance(
             muestra,
             model.predict_proba,
@@ -142,8 +163,6 @@ def predict():
         total = sum([f["Importancia"] for f in top_features])
         for f in top_features:
             f["Importancia"] = round(f["Importancia"] / total * 100, 2)
-
-        print(f"✅ LIME generado correctamente para la muestra dominante ({clase_dominante})")
 
     except Exception as e:
         top_features = [{'Característica': 'Error en LIME', 'Importancia': 0.0}]
