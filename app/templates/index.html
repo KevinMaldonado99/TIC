@@ -2,26 +2,37 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>🔐 Detección de Malware</title>
+    <title>🧠 Clasificador Ransomware vs Benign</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <h1>🔍 Prototipo de Detección de Malware</h1>
+    <h1>🔍 Clasificación de Ransomware vs Benigno</h1>
 
     <form method="POST" action="/predict" enctype="multipart/form-data">
         <label>Sube tu dataset (.csv) sin etiquetas:</label>
         <input type="file" name="dataset" accept=".csv" required>
-        <button type="submit">Ejecutar predicción</button>
+        <button type="submit">Ejecutar clasificación</button>
     </form>
+    
+    {% if mensaje_error %}
+    <div class="alert alert-warning">
+        {{ mensaje_error }}
+    </div>
+    {% endif %}
+
 
     {% if clase_dominante %}
     <div class="panel">
-        <h2>🧠 Resultado del Análisis</h2>
+        <h2>🧩 Resultado del Análisis</h2>
         <div class="card">
             <div class="left">
-                <h3 class="alert">{{ clase_dominante }}</h3>
+                <h3 class="alert 
+                    {% if clase_dominante == 'Ransomware' %} alert-danger 
+                    {% else %} alert-success {% endif %}">
+                    {{ clase_dominante }}
+                </h3>
 
                 <div class="gauge-container">
                     <canvas id="gaugeChart"
@@ -49,7 +60,6 @@
                 </div>
                 {% endif %}
 
-
                 {% if top_features %}
                 <div class="analysis-card">
                     <h4>Características más influyentes:</h4>
@@ -60,7 +70,7 @@
                     </ul>
                     <h4>Ficha técnica del análisis:</h4>
                     <p><b>Hash:</b> {{ file_hash }}</p>
-                    <p><b>Modelo:</b> RandomForest v1.0</p>
+                    <p><b>Modelo:</b> RandomForest - Ransomware v1.0</p>
                     <p><b>Tiempo de análisis:</b> {{ tiempo_analisis }} s</p>
                 </div>
                 {% endif %}
