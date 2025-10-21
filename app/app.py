@@ -54,17 +54,67 @@ def predict():
     start_time = time.time()
     fecha_analisis = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # -------------------------
-    # Alinear columnas con el modelo
-    # -------------------------
     columnas_modelo = model.feature_names_in_
+
+    # -------------------------
+    # ✅ 1. Validar estructura del archivo
+    # -------------------------
+        # Normalizamos nombres (sin espacios, minúsculas)
+    cols_input = [c.strip().lower() for c in df.columns]
+    cols_modelo = [c.strip().lower() for c in columnas_modelo]
+
+    # Contamos cuántas columnas del modelo están en el archivo
+    coincidencias = len(set(cols_input).intersection(set(cols_modelo)))
+    porcentaje_coincidencia = (coincidencias / len(cols_modelo)) * 100
+
+    if porcentaje_coincidencia < 90:  # puedes ajustar el umbral
+        return render_template(
+            "index.html",
+            clase_dominante="Desconocido",
+            mensaje_error=f"⚠️ El archivo no coincide con las características esperadas ({porcentaje_coincidencia:.2f}% de coincidencia).",
+            confianza_promedio=0,
+            top_features=[],
+            dist_image=None,
+            porcentajes={},
+            precision=0,
+            recall=0,
+            f1_score=0,
+            file_hash=file_hash,
+            tiempo_analisis=0,
+            fecha_analisis=fecha_analisis
+        )
+
+
+    # -------------------------
+    # ✅ 2. Alinear columnas con el modelo
+    # -------------------------
     X = pd.DataFrame(columns=columnas_modelo)
     for col in columnas_modelo:
         X[col] = df[col] if col in df.columns else 0
     X = X[columnas_modelo]
 
     # -------------------------
-    # Clasificación (Ransomware / Benign)
+    # ✅ 3. Validar que el dataset tenga al menos 1 fila con datos
+    # -------------------------
+    if X.empty or len(X) == 0 or X.isna().all().all():
+        return render_template(
+            "index.html",
+            clase_dominante="Desconocido",
+            mensaje_error="⚠️ El archivo no contiene datos válidos o no se reconocen características para clasificar.",
+            confianza_promedio=0,
+            top_features=[],
+            dist_image=None,
+            porcentajes={},
+            precision=0,
+            recall=0,
+            f1_score=0,
+            file_hash=file_hash,
+            tiempo_analisis=0,
+            fecha_analisis=fecha_analisis
+        )
+
+    # -------------------------
+    # ✅ 4. Clasificación (Ransomware / Benign)
     # -------------------------
     y_pred = model.predict(X)
     y_pred_labels = label_encoder.inverse_transform(y_pred)
@@ -90,7 +140,7 @@ def predict():
     confianza_promedio = round(float(np.mean(confidencias)) * 100, 2)
 
     # -------------------------
-    # ⚠️ Detección de muestras desconocidas (dinámica)
+    # ⚠️ 5. Detección de muestras desconocidas
     # -------------------------
     if confianza_promedio < 35 or pred_counts.sum() == 0:
         return render_template(
@@ -186,6 +236,7 @@ def predict():
         recall=recall,
         f1_score=f1_score
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
