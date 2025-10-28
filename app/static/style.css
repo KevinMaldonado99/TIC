@@ -115,3 +115,49 @@ li {
     color: #ccc;
     margin: 3px 0;
 }
+
+/* Nivel de riesgo */
+.risk-bar { margin-top: 10px; }
+.bar-container {
+  width: 100%;
+  background-color: #222;
+  border-radius: 10px;
+  height: 10px;
+  overflow: hidden;
+}
+.bar { height: 10px; border-radius: 10px; background-color: #00ff88; transition: width 0.5s; }
+.high { color: #ff4d4d; font-weight: bold; }
+.medium { color: #ff9933; font-weight: bold; }
+.low { color: #00cc66; font-weight: bold; }
+
+/* Barras LIME */
+.lime-bars { list-style: none; padding: 0; margin-top: 10px; }
+.lime-bars li { display: flex; align-items: center; margin-bottom: 6px; }
+.feature-name { width: 45%; font-size: 0.9em; color: #ccc; }
+.bar-bg {
+  background: #333;
+  border-radius: 10px;
+  width: 45%;
+  height: 10px;
+  margin: 0 8px;
+  overflow: hidden;
+}
+.bar-fill {
+  background: linear-gradient(90deg, #ff9800, #ffcc00);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.3s ease-in-out;
+}
+.percent { font-size: 0.85em; color: #bbb; }
+
+/* Bloque técnico */
+.tech-block {
+  background-color: #111;
+  border: 1px solid #444;
+  border-radius: 8px;
+  color: #ddd;
+  padding: 10px;
+  font-family: "Consolas", monospace;
+  font-size: 0.85em;
+  white-space: pre-wrap;
+}
