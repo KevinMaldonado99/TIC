@@ -117,6 +117,7 @@ def predict():
     # ✅ 4. Clasificación (Ransomware / Benign)
     # -------------------------
     y_pred = model.predict(X)
+    
     y_pred_labels = label_encoder.inverse_transform(y_pred)
     df["Clasificación"] = y_pred_labels
     tiempo_analisis = round(time.time() - start_time, 2)
@@ -133,6 +134,7 @@ def predict():
     # Calcular confianza promedio
     # -------------------------
     y_pred_proba = model.predict_proba(X)
+    print(y_pred_proba)
     confidencias = []
     for i, pred_label in enumerate(y_pred_labels):
         idx = np.where(clases == pred_label)[0][0]
@@ -142,22 +144,24 @@ def predict():
     # -------------------------
     # ⚠️ 5. Detección de muestras desconocidas
     # -------------------------
-    if confianza_promedio < 35 or pred_counts.sum() == 0:
+    UMBRAL_DESCONOCIDO = 85
+    if confianza_promedio < UMBRAL_DESCONOCIDO  or pred_counts.sum() == 0:
         return render_template(
             "index.html",
             clase_dominante="Desconocido",
             mensaje_error="⚠️ La muestra no coincide con las características conocidas por el modelo (ni Ransomware ni Benigno).",
-            confianza_promedio=confianza_promedio,
+            confianza_promedio=0.0,
             top_features=[],
             dist_image=None,
             porcentajes={},
-            precision=0,
-            recall=0,
-            f1_score=0,
+            precision=None,
+            recall=None,
+            f1_score=None,
             file_hash=file_hash,
             tiempo_analisis=tiempo_analisis,
             fecha_analisis=fecha_analisis
         )
+    
 
     # -------------------------
     # Gráfico de distribución
