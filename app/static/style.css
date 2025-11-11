@@ -22,12 +22,12 @@ body {
 .left, .right {
     background-color: #1f242b;
     border-radius: 5px;
-    padding: 35px;
-    width: 35%;
+    padding: 50px;
+    width: 50%;
 }
 
 .alert {
-    background-color: #d73a49;
+    background-color:  #5761d1;
     color: white;
     text-align: center;
     border-radius: 8px;
@@ -116,48 +116,70 @@ li {
     margin: 3px 0;
 }
 
-/* Nivel de riesgo */
-.risk-bar { margin-top: 10px; }
+/* ─────────── NIVEL DE RIESGO ─────────── */
+.risk-bar { margin-top: 15px; }
 .bar-container {
   width: 100%;
   background-color: #222;
   border-radius: 10px;
-  height: 10px;
+  height: 12px;
   overflow: hidden;
+  position: relative;
 }
-.bar { height: 10px; border-radius: 10px; background-color: #00ff88; transition: width 0.5s; }
+
+.risk-gradient {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.7s ease-in-out;
+}
+
+/* Gradientes dinámicos según clase */
+.risk-gradient.benign {
+  background: linear-gradient(90deg, #00cc66, #ffcc00, #ff3333);
+  
+}
+.risk-gradient.ransomware {
+  background: linear-gradient(90deg, #ff3333, #ff6600, #00cc66);
+}
+
+/* Colores de texto según riesgo */
 .high { color: #ff4d4d; font-weight: bold; }
-.medium { color: #ff9933; font-weight: bold; }
+.medium { color: #ffa500; font-weight: bold; }
 .low { color: #00cc66; font-weight: bold; }
 
-/* Barras LIME */
-.lime-bars { list-style: none; padding: 0; margin-top: 10px; }
-.lime-bars li { display: flex; align-items: center; margin-bottom: 6px; }
-.feature-name { width: 45%; font-size: 0.9em; color: #ccc; }
+/* ─────────── LIME BARS ─────────── */
+.lime-bars {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+.lime-bars li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.feature-name {
+  width: 40%;
+  font-size: 0.9em;
+  color: #ccc;
+}
 .bar-bg {
   background: #333;
-  border-radius: 10px;
+  border-radius: 8px;
   width: 45%;
   height: 10px;
   margin: 0 8px;
   overflow: hidden;
 }
-.bar-fill {
-  background: linear-gradient(90deg, #ff9800, #ffcc00);
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.3s ease-in-out;
-}
-.percent { font-size: 0.85em; color: #bbb; }
 
-/* Bloque técnico */
-.tech-block {
-  background-color: #111;
-  border: 1px solid #444;
+/* Base para las barras LIME */
+.bar-fill {
+  height: 100%;
   border-radius: 8px;
-  color: #ddd;
-  padding: 10px;
-  font-family: "Consolas", monospace;
+  background: linear-gradient(90deg, rgba(255,165,0,0.9), rgba(255,200,0,0.9));
+  transition: width 0.5s ease-in-out;
+}
+.percent {
   font-size: 0.85em;
-  white-space: pre-wrap;
+  color: #bbb;
 }
