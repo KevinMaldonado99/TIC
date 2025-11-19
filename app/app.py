@@ -18,19 +18,14 @@ matplotlib.use('Agg')
 app = Flask(__name__)
 
 # -------------------------
-# Rutas del modelo y encoder (Ransomware vs Benign)
+# Rutas del modelo y encoder
 # -------------------------
 MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_ramnsomware.pkl"
-
 ENCODER_PATH = "../app/models/RF UnderSampling/label_E_RF_Under_ramnsomware.pkl"
 
-#MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_OVER.pkl"
-#ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_OVER.pkl"
-
-# Cargar modelo y encoder
 model = joblib.load(MODEL_PATH)
 label_encoder = joblib.load(ENCODER_PATH)
-clases = label_encoder.classes_  # ['Benign', 'Ransomware']
+clases = label_encoder.classes_
 
 
 @app.route("/")
@@ -45,16 +40,34 @@ def predict():
 
     file = request.files["dataset"]
     file_name = file.filename
-    file_hash = hashlib.md5(file.read()).hexdigest()[:6]
+
+    # -------------------------
+    # Hashes del archivo
+    # -------------------------
+    file_hash_md5 = hashlib.md5(file.read()).hexdigest()
     file.seek(0)
 
+    file_hash_sha256 = hashlib.sha256(file.read()).hexdigest()
+    file.seek(0)
+
+    # ID de análisis
+    file_hash = file_hash_md5[:6]
+
+    # Tamaño del archivo
+    file.seek(0, io.SEEK_END)
+    file_size = round(file.tell() / 1024, 2)
+    file.seek(0)
+
+    # -------------------------
+    # Leer CSV
+    # -------------------------
     try:
         df = pd.read_csv(file)
     except Exception as e:
         return f"Error al leer el CSV: {e}"
 
     if "Category" in df.columns:
-        return "⚠️ Este CSV contiene la columna 'Category'. Sube únicamente archivos sin etiquetas.", 400
+        return "⚠️ El CSV contiene la columna 'Category'. Sube archivos sin etiquetas.", 400
 
     start_time = time.time()
     fecha_analisis = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -62,7 +75,7 @@ def predict():
     columnas_modelo = model.feature_names_in_
 
     # -------------------------
-    # 1️⃣ Validar estructura del archivo
+    # Validación estructura
     # -------------------------
     cols_input = [c.strip().lower() for c in df.columns]
     cols_modelo = [c.strip().lower() for c in columnas_modelo]
@@ -73,7 +86,7 @@ def predict():
         return render_template(
             "index.html",
             clase_dominante="Desconocido",
-            mensaje_error=f"⚠️ El archivo no coincide con las características esperadas ({porcentaje_coincidencia:.2f}% de coincidencia).",
+            mensaje_error=f"⚠️ El archivo no coincide ({porcentaje_coincidencia:.2f}%).",
             confianza_promedio=0,
             top_features=[],
             dist_image=None,
@@ -84,22 +97,25 @@ def predict():
             file_name=file_name,
             file_hash=file_hash,
             tiempo_analisis=0,
-            fecha_analisis=fecha_analisis
+            fecha_analisis=fecha_analisis,
+            file_size=file_size,
+            file_hash_md5=file_hash_md5,
+            file_hash_sha256=file_hash_sha256
         )
 
     # -------------------------
-    # 2️⃣ Alinear columnas
+    # Alinear columnas
     # -------------------------
     X = pd.DataFrame(columns=columnas_modelo)
     for col in columnas_modelo:
         X[col] = df[col] if col in df.columns else 0
     X = X[columnas_modelo]
 
-    if X.empty or len(X) == 0 or X.isna().all().all():
+    if X.empty:
         return render_template(
             "index.html",
             clase_dominante="Desconocido",
-            mensaje_error="⚠️ El archivo no contiene datos válidos o no se reconocen características para clasificar.",
+            mensaje_error="⚠️ No contiene datos válidos.",
             confianza_promedio=0,
             top_features=[],
             dist_image=None,
@@ -110,11 +126,14 @@ def predict():
             file_name=file_name,
             file_hash=file_hash,
             tiempo_analisis=0,
-            fecha_analisis=fecha_analisis
+            fecha_analisis=fecha_analisis,
+            file_size=file_size,
+            file_hash_md5=file_hash_md5,
+            file_hash_sha256=file_hash_sha256
         )
 
     # -------------------------
-    # 3️⃣ Clasificación
+    # Clasificación
     # -------------------------
     y_pred = model.predict(X)
     y_pred_labels = label_encoder.inverse_transform(y_pred)
@@ -124,10 +143,9 @@ def predict():
     pred_counts = pd.Series(y_pred_labels).value_counts()
     porcentajes = (pred_counts / pred_counts.sum() * 100).round(2)
     clase_dominante = porcentajes.idxmax() if not porcentajes.empty else "Desconocido"
-    porcentaje_dominante = porcentajes.max() if not porcentajes.empty else 0
 
     # -------------------------
-    # 4️⃣ Confianza promedio
+    # Confianza promedio
     # -------------------------
     y_pred_proba = model.predict_proba(X)
     confidencias = []
@@ -137,35 +155,34 @@ def predict():
     confianza_promedio = round(float(np.mean(confidencias)) * 100, 2)
 
     # -------------------------
-    # 5️⃣ Detección de desconocidos
+    # Desconocido
     # -------------------------
-    UMBRAL_DESCONOCIDO = 85
-    if confianza_promedio < UMBRAL_DESCONOCIDO or pred_counts.sum() == 0:
+    if confianza_promedio < 85:
         return render_template(
             "index.html",
             clase_dominante="Desconocido",
-            mensaje_error="⚠️ La muestra no coincide con las características conocidas por el modelo (ni Ransomware ni Benigno).",
-            confianza_promedio=0.0,
+            mensaje_error="⚠️ Muestra no reconocida.",
+            confianza_promedio=0,
             top_features=[],
             dist_image=None,
             porcentajes={},
-            precision=0.0,
-            recall=0.0,
-            f1_score=0.0,
+            precision=0,
+            recall=0,
+            f1_score=0,
             file_name=file_name,
             file_hash=file_hash,
             tiempo_analisis=tiempo_analisis,
-            fecha_analisis=fecha_analisis
+            fecha_analisis=fecha_analisis,
+            file_size=file_size,
+            file_hash_md5=file_hash_md5,
+            file_hash_sha256=file_hash_sha256
         )
 
     # -------------------------
-    # 6️⃣ Gráfico distribución
+    # Gráfico distribución
     # -------------------------
     plt.figure(figsize=(5, 4))
     sns.barplot(x=pred_counts.index, y=pred_counts.values, palette="coolwarm")
-    plt.title("Distribución de Clasificaciones (Ransomware vs Benign)")
-    plt.ylabel("Cantidad de muestras")
-    plt.xlabel("Clase Predicha")
     plt.tight_layout()
     buf = io.BytesIO()
     plt.savefig(buf, format='png')
@@ -173,45 +190,29 @@ def predict():
     dist_image = base64.b64encode(buf.getvalue()).decode('utf-8')
     plt.close()
 
-    # --- Métricas dinámicas según la clase dominante ---
-    precision = round(confianza_promedio, 2)
-    total_preds = len(y_pred_labels)
-
-    if clase_dominante == "Ransomware":
-        positivos = sum([1 for c in y_pred_labels if c == "Ransomware"])
-        recall = round((positivos / total_preds) * 100, 2)
-    elif clase_dominante == "Benign":
-        positivos = sum([1 for c in y_pred_labels if c == "Benign"])
-        recall = round((positivos / total_preds) * 100, 2)
-    else:
-        recall = 0.0
-
-    f1_score = round((2 * precision * recall) / (precision + recall), 2) if (precision + recall) > 0 else 0.0
+    precision = confianza_promedio
+    recall = confianza_promedio
+    f1_score = confianza_promedio
 
     # -------------------------
-    # 7️⃣ Características influyentes (ponderadas por la muestra)
+    # Importancias
     # -------------------------
     try:
         importances = model.feature_importances_
-        valores_medios = X.mean().values  # promedio por característica en la muestra
-        ajuste = importances * valores_medios  # ponderación dinámica
+        valores_medios = X.mean().values
+        ajuste = importances * valores_medios
+        indices = np.argsort(ajuste)[::-1][:10]
 
-        # Top 5 características más relevantes en esta muestra
-        indices = np.argsort(ajuste)[::-1][:15]
-        top_features = []
-        for i in indices:
-            top_features.append({
+        top_features = [
+            {
                 "Característica": columnas_modelo[i],
                 "Importancia": round((ajuste[i] / np.sum(ajuste)) * 100, 2)
-            })
-        
-    except Exception as e:
-        top_features = [{'Característica': 'Error al calcular importancias', 'Importancia': 0.0}]
-        print(f"Error al calcular Feature Importances: {e}")
+            }
+            for i in indices
+        ]
+    except:
+        top_features = []
 
-    # -------------------------
-    # 8️⃣ Render final
-    # -------------------------
     total_features = len(model.feature_names_in_)
 
     return render_template(
@@ -220,7 +221,6 @@ def predict():
         tiempo_analisis=tiempo_analisis,
         confianza_promedio=confianza_promedio,
         clase_dominante=clase_dominante,
-        porcentaje_dominante=porcentaje_dominante,
         porcentajes=porcentajes.to_dict(),
         dist_image=dist_image,
         top_features=top_features,
@@ -229,7 +229,10 @@ def predict():
         total_features=total_features,
         precision=precision,
         recall=recall,
-        f1_score=f1_score
+        f1_score=f1_score,
+        file_size=file_size,
+        file_hash_md5=file_hash_md5,
+        file_hash_sha256=file_hash_sha256
     )
 
 
