@@ -10,7 +10,6 @@ import time
 import warnings
 import hashlib
 import numpy as np
-from lime.lime_tabular import LimeTabularExplainer
 
 warnings.filterwarnings("ignore")
 import matplotlib
@@ -21,22 +20,23 @@ app = Flask(__name__)
 # -------------------------
 # Rutas del modelo y encoder (Ransomware vs Benign)
 # -------------------------
+MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_ramnsomware.pkl"
 
-MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_OVER.pkl"
-ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_OVER.pkl"
+ENCODER_PATH = "../app/models/RF UnderSampling/label_E_RF_Under_ramnsomware.pkl"
 
-
-#MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_ramnsomware.pkl"
-#ENCODER_PATH = "../app/models/RF UnderSampling/label_E_RF_Under_ramnsomware.pkl"
+#MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_OVER.pkl"
+#ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_OVER.pkl"
 
 # Cargar modelo y encoder
 model = joblib.load(MODEL_PATH)
 label_encoder = joblib.load(ENCODER_PATH)
 clases = label_encoder.classes_  # ['Benign', 'Ransomware']
 
+
 @app.route("/")
 def index():
     return render_template("index.html")
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -188,47 +188,32 @@ def predict():
 
     f1_score = round((2 * precision * recall) / (precision + recall), 2) if (precision + recall) > 0 else 0.0
 
-
     # -------------------------
-    # 7️⃣ LIME - características influyentes
+    # 7️⃣ Características influyentes (ponderadas por la muestra)
     # -------------------------
     try:
-        explainer = LimeTabularExplainer(
-            X.values,
-            feature_names=columnas_modelo,
-            class_names=list(clases),
-            discretize_continuous=True
-        )
-    
-        muestra = X.iloc[0].values
-        exp = explainer.explain_instance(
-            muestra,
-            model.predict_proba,
-            num_features=5,
-            top_labels=1
-        )
+        importances = model.feature_importances_
+        valores_medios = X.mean().values  # promedio por característica en la muestra
+        ajuste = importances * valores_medios  # ponderación dinámica
 
-        lime_exp = exp.as_list(label=list(clases).index(y_pred_labels[0]))
+        # Top 5 características más relevantes en esta muestra
+        indices = np.argsort(ajuste)[::-1][:15]
         top_features = []
-        for nombre, valor in lime_exp:
+        for i in indices:
             top_features.append({
-                "Característica": nombre,
-                "Importancia": abs(valor)
+                "Característica": columnas_modelo[i],
+                "Importancia": round((ajuste[i] / np.sum(ajuste)) * 100, 2)
             })
-
-        total = sum([f["Importancia"] for f in top_features])
-        for f in top_features:
-            f["Importancia"] = round(f["Importancia"] / total * 100, 2)
-
+        
     except Exception as e:
-        top_features = [{'Característica': 'Error en LIME', 'Importancia': 0.0}]
-        print(f"Error al calcular LIME: {e}")
+        top_features = [{'Característica': 'Error al calcular importancias', 'Importancia': 0.0}]
+        print(f"Error al calcular Feature Importances: {e}")
 
     # -------------------------
     # 8️⃣ Render final
     # -------------------------
     total_features = len(model.feature_names_in_)
-    
+
     return render_template(
         "index.html",
         fecha_analisis=fecha_analisis,
@@ -241,11 +226,12 @@ def predict():
         top_features=top_features,
         file_hash=file_hash,
         file_name=file_name,
-        total_features=total_features,  # 👈 agregado
+        total_features=total_features,
         precision=precision,
         recall=recall,
         f1_score=f1_score
     )
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
