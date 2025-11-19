@@ -10,18 +10,21 @@
 <body>
     <h1>🔍 Clasificación de Ransomware vs Benigno</h1>
 
-    <form method="POST" action="/predict" enctype="multipart/form-data">
+    <form method="POST" action="/predict" enctype="multipart/form-data" class="no-print">
         <label>Sube tu dataset (.csv) sin etiquetas:</label>
         <input type="file" name="dataset" accept=".csv" required>
         <button type="submit">Ejecutar clasificación</button>
     </form>
 
     {% if mensaje_error %}
-    <div class="alert alert-warning">{{ mensaje_error }}</div>
+    <div class="alert alert-warning no-print">{{ mensaje_error }}</div>
     {% endif %}
 
     {% if clase_dominante %}
     <div class="panel">
+
+
+
         <h2>🧩 Resultado del Análisis</h2>
 
         <div class="card">
@@ -62,31 +65,28 @@
                 <!-- Nivel de Riesgo -->
                 {% if confianza_promedio %}
                 <div class="risk-bar">
-                <p><b>Nivel de Riesgo:</b>
-                    {% if clase_dominante == 'Benign' %}
-                        <span class="low">Bajo 🟢</span>
-                    {% elif clase_dominante == 'Ransomware' %}
-                        {% if confianza_promedio >= 90 %}
-                            <span class="high">Alto 🔥</span>
-                        {% elif confianza_promedio >= 70 %}
-                            <span class="medium">Medio 🟠</span>
-                        {% else %}
+                    <p><b>Nivel de Riesgo:</b>
+                        {% if clase_dominante == 'Benign' %}
                             <span class="low">Bajo 🟢</span>
+                        {% elif clase_dominante == 'Ransomware' %}
+                            {% if confianza_promedio >= 90 %}
+                                <span class="high">Alto 🔥</span>
+                            {% elif confianza_promedio >= 70 %}
+                                <span class="medium">Medio 🟠</span>
+                            {% else %}
+                                <span class="low">Bajo 🟢</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="medium">Desconocido ⚪</span>
                         {% endif %}
-                    {% else %}
-                        <span class="medium">Desconocido ⚪</span>
-                    {% endif %}
-                </p>
-
+                    </p>
 
                     <div class="bar-container">
                         {% if clase_dominante == 'Ransomware' %}
-                            <!-- Ransomware: predomina rojo -->
                             <div class="risk-gradient ransomware" data-width="{{ confianza_promedio }}"></div>
-                            {% else %}
-                            <!-- Benigno: predomina verde -->
+                        {% else %}
                             <div class="risk-gradient benign" data-width="{{ confianza_promedio }}"></div>
-                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -110,7 +110,7 @@
                 {% endif %}
             </div>
 
-            <!-- Ficha Técnica -->
+            <!-- FICHA TÉCNICA -->
             <div class="right">
 
                 <!-- PANEL FORENSE 1 -->
@@ -151,16 +151,18 @@
                         </tr>
                     </table>
                 </div>
+                        <!-- BOTÓN PARA ABRIR REPORTE PDF -->
+        <a href="{{ reporte_url }}" target="_blank" class="no-print">
+            <center><button class="print-button">🖨️ Generar Reporte PDF</button></center>
+        </a>
 
             </div>
-
 
         </div>
     </div>
     {% endif %}
 
     <script src="{{ url_for('static', filename='gauge.js') }}"></script>
-    
 
 </body>
 </html>
