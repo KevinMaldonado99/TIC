@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>🧠 Clasificador Ransomware vs Benigno</title>
+    <title>🧠 Clasificador Trojan vs Benigno</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-    <h1>🔍 Clasificación de Ransomware vs Benigno</h1>
+    <h1>🔍 Clasificación de Trojan vs Benigno</h1>
 
     <form method="POST" action="/predict" enctype="multipart/form-data" class="no-print">
         <label>Sube tu dataset (.csv) sin etiquetas:</label>
@@ -30,7 +30,7 @@
         <div class="card">
             <div class="left">
                 <h3 class="alert 
-                    {% if clase_dominante == 'Ransomware' %} alert-danger 
+                    {% if clase_dominante == 'Trojan' %} alert-danger 
                     {% elif clase_dominante == 'Desconocido' %} alert-secondary 
                     {% else %} alert-success {% endif %}">
                     {{ clase_dominante }}
@@ -68,7 +68,7 @@
                     <p><b>Nivel de Riesgo:</b>
                         {% if clase_dominante == 'Benign' %}
                             <span class="low">Bajo 🟢</span>
-                        {% elif clase_dominante == 'Ransomware' %}
+                        {% elif clase_dominante == 'Trojan' %}
                             {% if confianza_promedio >= 90 %}
                                 <span class="high">Alto 🔥</span>
                             {% elif confianza_promedio >= 70 %}
@@ -82,8 +82,8 @@
                     </p>
 
                     <div class="bar-container">
-                        {% if clase_dominante == 'Ransomware' %}
-                            <div class="risk-gradient ransomware" data-width="{{ confianza_promedio }}"></div>
+                        {% if clase_dominante == 'Trojan' %}
+                            <div class="risk-gradient Trojan" data-width="{{ confianza_promedio }}"></div>
                         {% else %}
                             <div class="risk-gradient benign" data-width="{{ confianza_promedio }}"></div>
                         {% endif %}
@@ -131,7 +131,7 @@
                 <div class="forensic-card">
                     <h4 class="forensic-title">🧪 Ficha Técnica del Análisis y del Modelo</h4>
                     <table class="forensic-table">
-                        <tr><td>Modelo utilizado:</td><td>RandomForestClassifier – Ransomware v1.0</td></tr>
+                        <tr><td>Modelo utilizado:</td><td>RandomForestClassifier – Trojan v1.0</td></tr>
                         <tr><td>Cantidad de características:</td><td>{{ total_features }}</td></tr>
                         <tr><td>Versión del dataset:</td><td>FeatureSet v2.3</td></tr>
                         <tr><td>Tiempo de análisis:</td><td>{{ tiempo_analisis }} s</td></tr>
@@ -140,7 +140,7 @@
                         <tr><td>Librerías clave:</td><td>Scikit-Learn 1.4, Pandas 2.2, NumPy 1.26</td></tr>
                         <tr><td>Label (clasificación):</td>
                             <td>
-                                {% if clase_dominante == "Ransomware" %}
+                                {% if clase_dominante == "Trojan" %}
                                     <span style="color:#ff4d4d; font-weight:bold;">🔴 {{ clase_dominante }}</span>
                                 {% elif clase_dominante == "Benign" %}
                                     <span style="color:#00cc66; font-weight:bold;">🟢 {{ clase_dominante }}</span>

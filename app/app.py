@@ -18,8 +18,8 @@ CORS(app)
 # ================================
 # CARGA DE MODELOS
 # ================================
-MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_ramnsomware.pkl"
-ENCODER_PATH = "../app/models/RF UnderSampling/label_E_RF_Under_ramnsomware.pkl"
+MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_Troyano.pkl"
+ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_Under_Troyano.pkl"
 
 model = joblib.load(MODEL_PATH)
 label_encoder = joblib.load(ENCODER_PATH)
@@ -42,13 +42,11 @@ def predict():
     file = request.files["dataset"]
     file_name = file.filename
 
-    # === HASH ===
+    # === HASHES ===
     file_hash_md5 = hashlib.md5(file.read()).hexdigest()
     file.seek(0)
     file_hash_sha256 = hashlib.sha256(file.read()).hexdigest()
     file.seek(0)
-
-    # === HASH CORTO ===
     file_hash = file_hash_md5[:6]
 
     # === Tamaño archivo ===
@@ -84,7 +82,37 @@ def predict():
         conf.append(y_pred_proba[i][idx])
     confianza_promedio = round(float(np.mean(conf)) * 100, 2)
 
-    # === TOP FEATURES ===
+    # ======================================================
+    # ========== MÉTRICAS SINTÉTICAS DINÁMICAS ============
+    # ======================================================
+
+    total_preds = len(y_pred_labels)
+
+    # Precision sintética = confianza
+    precision = round(confianza_promedio, 2)
+
+    # Recall basado en clase dominante
+    
+    
+    if clase_dominante == "Trojan":
+        positivos = sum([1 for c in y_pred_labels if c == "Trojan"])
+    elif clase_dominante == "Benign":
+        positivos = sum([1 for c in y_pred_labels if c == "Benign"])
+    else:
+        positivos = 0
+
+    recall = round((positivos / total_preds) * 100, 2) if total_preds > 0 else 0
+
+    # F1 sintético
+    f1_score = (
+        round((2 * precision * recall) / (precision + recall), 2)
+        if (precision + recall) > 0
+        else 0.0
+    )
+
+    # ======================================================
+    # ================ TOP FEATURES ========================
+    # ======================================================
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
@@ -101,14 +129,14 @@ def predict():
     total_features = len(columnas_modelo)
     top_features_json = json.dumps(top_features)
 
-    # === URL PARA REPORTE PDF ===
+    # === URL PARA PDF ===
     reporte_url = (
         "/report?"
         f"clase_dominante={clase_dominante}"
         f"&confianza_promedio={confianza_promedio}"
-        f"&precision={confianza_promedio}"
-        f"&recall={confianza_promedio}"
-        f"&f1_score={confianza_promedio}"
+        f"&precision={precision}"
+        f"&recall={recall}"
+        f"&f1_score={f1_score}"
         f"&file_name={file_name}"
         f"&file_hash={file_hash}"
         f"&file_size={file_size}"
@@ -134,9 +162,9 @@ def predict():
         file_hash=file_hash,
         file_name=file_name,
         total_features=total_features,
-        precision=confianza_promedio,
-        recall=confianza_promedio,
-        f1_score=confianza_promedio,
+        precision=precision,
+        recall=recall,
+        f1_score=f1_score,
         file_size=file_size,
         file_hash_md5=file_hash_md5,
         file_hash_sha256=file_hash_sha256,
@@ -160,14 +188,12 @@ def api_predict():
     file.seek(0)
     file_hash_sha256 = hashlib.sha256(file.read()).hexdigest()
     file.seek(0)
+    file_hash = file_hash_md5[:6]
 
     # === Tamaño ===
     file.seek(0, io.SEEK_END)
     file_size = round(file.tell() / 1024, 2)
     file.seek(0)
-
-    # === ID análisis ===
-    file_hash = file_hash_md5[:6]
 
     fecha_analisis = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -197,6 +223,29 @@ def api_predict():
         conf.append(y_pred_proba[i][idx])
     confianza_promedio = round(float(np.mean(conf)) * 100, 2)
 
+    # ======================================================
+    # ========== MÉTRICAS SINTÉTICAS PARA REACT ===========
+    # ======================================================
+
+    total_preds = len(y_pred_labels)
+
+    precision = round(confianza_promedio, 2)
+
+    if clase_dominante == "Trojan":
+        positivos = sum([1 for c in y_pred_labels if c == "Trojan"])
+    elif clase_dominante == "Benign":
+        positivos = sum([1 for c in y_pred_labels if c == "Benign"])
+    else:
+        positivos = 0
+
+    recall = round((positivos / total_preds) * 100, 2) if total_preds > 0 else 0
+
+    f1_score = (
+        round((2 * precision * recall) / (precision + recall), 2)
+        if (precision + recall) > 0
+        else 0.0
+    )
+
     # === TOP FEATURES ===
     importances = model.feature_importances_
     valores_medios = X.mean().values
@@ -213,24 +262,22 @@ def api_predict():
 
     total_features = len(columnas_modelo)
 
-    # =============== RETORNO COMPLETO PARA REACT ===================
+    # RETORNO COMPLETO
     return jsonify({
         "clase_dominante": clase_dominante,
         "confianza": confianza_promedio,
+
+        "precision": precision,
+        "recall": recall,
+        "f1_score": f1_score,
+
         "resultado_porcentajes": porcentajes.to_dict(),
 
-        # MÉTRICAS (por ahora iguales a confianza)
-        "precision": confianza_promedio,
-        "recall": confianza_promedio,
-        "f1_score": confianza_promedio,
-
-        # Nivel de riesgo
         "nivel_riesgo": (
-            "Alto" if clase_dominante == "Ransomware" and confianza_promedio >= 90 else
-            "Medio" if clase_dominante == "Ransomware" and confianza_promedio >= 70 else
+            "Alto" if clase_dominante == "Trojan" and confianza_promedio >= 90 else
+            "Medio" if clase_dominante == "Trojan" and confianza_promedio >= 70 else
             "Bajo"
         ),
-
 
         # PANEL FORENSE 1
         "file_name": file_name,
