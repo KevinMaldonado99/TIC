@@ -60,11 +60,31 @@ def predict():
 
     # === LECTURA CSV ===
     df = pd.read_csv(file)
-    columnas_modelo = model.feature_names_in_
+    columnas_modelo = list(model.feature_names_in_)
 
-    X = pd.DataFrame(columns=columnas_modelo)
-    for col in columnas_modelo:
-        X[col] = df[col] if col in df.columns else 0
+    try:
+        # 1. Verificar que existan TODAS las columnas necesarias
+        for col in columnas_modelo:
+            if col not in df.columns:
+                return jsonify({
+                    "status": "error",
+                    "message": f"El archivo no contiene la columna requerida: '{col}'. "
+                            "Por favor sube un CSV válido del dominio Benign/Trojan."
+                }), 400
+
+        # 2. Extraer únicamente las columnas necesarias
+        X = df[columnas_modelo]
+
+        # 3. Validar tipos → convertir a float
+        X = X.astype(float)
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": "El archivo no es compatible con el modelo. "
+                    "Debe contener las características correctas y valores numéricos.",
+            "error": str(e)
+        }), 400
 
     # === PREDICCIÓN ===
     start = time.time()
@@ -83,6 +103,15 @@ def predict():
         idx = np.where(clases == label)[0][0]
         conf.append(y_pred_proba[i][idx])
     confianza_promedio = round(float(np.mean(conf)) * 100, 2)
+    
+    if confianza_promedio < 75:
+        return jsonify({
+            "status": "error",
+            "message": "El archivo no pertenece al dominio del modelo (Benign/Trojan). "
+                    "La confianza es demasiado baja para generar un resultado confiable.",
+            "confianza": confianza_promedio
+        }), 400
+
 
     # ======================================================
     # ========== MÉTRICAS SINTÉTICAS DINÁMICAS ============
@@ -196,12 +225,36 @@ def api_predict():
     fecha_analisis = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # === CSV ===
+    # ===============================
+    # VALIDACIÓN DE ARCHIVO CSV
+    # ===============================
     df = pd.read_csv(file)
-    columnas_modelo = model.feature_names_in_
+    columnas_modelo = list(model.feature_names_in_)
 
-    X = pd.DataFrame(columns=columnas_modelo)
-    for col in columnas_modelo:
-        X[col] = df[col] if col in df.columns else 0
+    try:
+        # 1. Verificar que existan TODAS las columnas necesarias
+        for col in columnas_modelo:
+            if col not in df.columns:
+                return jsonify({
+                    "status": "error",
+                    "message": f"El archivo no contiene la columna requerida: '{col}'. "
+                            "Por favor sube un CSV válido del dominio Benign/Trojan."
+                }), 400
+
+        # 2. Extraer únicamente las columnas necesarias
+        X = df[columnas_modelo]
+
+        # 3. Validar tipos → convertir a float
+        X = X.astype(float)
+
+    except Exception as e:
+        return jsonify({
+            "status": "error",
+            "message": "El archivo no es compatible con el modelo. "
+                    "Debe contener las características correctas y valores numéricos.",
+            "error": str(e)
+        }), 400
+
 
     # === PRED ===
     start = time.time()
@@ -215,11 +268,22 @@ def api_predict():
 
     # === CONFIANZA ===
     y_pred_proba = model.predict_proba(X)
+    
+    
     conf = []
     for i, label in enumerate(y_pred_labels):
         idx = np.where(clases == label)[0][0]
         conf.append(y_pred_proba[i][idx])
     confianza_promedio = round(float(np.mean(conf)) * 100, 2)
+
+    if confianza_promedio < 75:
+        return jsonify({
+            "status": "error",
+            "message": "El archivo no pertenece al dominio del modelo (Benign/Trojan). "
+                    "La confianza es demasiado baja para generar un resultado confiable.",
+            "confianza": confianza_promedio
+        }), 400
+
 
     # ======================================================
     # ========== MÉTRICAS SINTÉTICAS PARA REACT ===========
@@ -319,6 +383,8 @@ def api_predict():
         # ← ← ← NUEVO
         "reporte_url": reporte_url
     })
+    
+    
 
 
 # ======================================================
