@@ -175,8 +175,8 @@ h1 {
     <table class="table">
         {% for f in top_features %}
         <tr class="feature-row">
-            <td>{{ f["Característica"] }}</td>
-            <td>{{ f["Importancia"] }}%</td>
+            <td>{{ f["caracteristica"] }}</td>
+            <td>{{ f["importancia"] }}%</td>
         </tr>
         {% endfor %}
     </table>
@@ -185,6 +185,18 @@ h1 {
 <script>
 window.print();
 </script>
+<script>
+window.onload = function () {
+    // Abre el diálogo de impresión automáticamente
+    window.print();
+
+    // Espera unos segundos y cierra la pestaña
+    setTimeout(() => {
+        window.close();
+    }, 500);
+};
+</script>
+
 
 </body>
 </html>

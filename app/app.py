@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
+from urllib.parse import unquote
+from urllib.parse import quote
 import pandas as pd
 import joblib
 import io
@@ -88,12 +90,8 @@ def predict():
 
     total_preds = len(y_pred_labels)
 
-    # Precision sintética = confianza
     precision = round(confianza_promedio, 2)
 
-    # Recall basado en clase dominante
-    
-    
     if clase_dominante == "Trojan":
         positivos = sum([1 for c in y_pred_labels if c == "Trojan"])
     elif clase_dominante == "Benign":
@@ -103,7 +101,6 @@ def predict():
 
     recall = round((positivos / total_preds) * 100, 2) if total_preds > 0 else 0
 
-    # F1 sintético
     f1_score = (
         round((2 * precision * recall) / (precision + recall), 2)
         if (precision + recall) > 0
@@ -116,15 +113,16 @@ def predict():
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
-    indices = np.argsort(ajuste)[::-1][:10]
+    indices = np.argsort(ajuste)[::-1][:8]
 
     top_features = [
-        {
-            "Característica": columnas_modelo[i],
-            "Importancia": round((ajuste[i] / np.sum(ajuste)) * 100, 2)
-        }
-        for i in indices
+    {
+        "Característica": columnas_modelo[i],
+        "Importancia": float(round((ajuste[i] / np.sum(ajuste)) * 100, 2))
+    }
+    for i in indices
     ]
+
 
     total_features = len(columnas_modelo)
     top_features_json = json.dumps(top_features)
@@ -250,7 +248,7 @@ def api_predict():
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
-    indices = np.argsort(ajuste)[::-1][:10]
+    indices = np.argsort(ajuste)[::-1][:8]
 
     top_features = [
         {
@@ -262,7 +260,29 @@ def api_predict():
 
     total_features = len(columnas_modelo)
 
-    # RETORNO COMPLETO
+    # === URL PARA REPORTE PDF ===
+    reporte_url = (
+        "/report?"
+        f"clase_dominante={clase_dominante}"
+        f"&confianza_promedio={confianza_promedio}"
+        f"&precision={precision}"
+        f"&recall={recall}"
+        f"&f1_score={f1_score}"
+        f"&file_name={file_name}"
+        f"&file_hash={file_hash}"
+        f"&file_size={file_size}"
+        f"&file_hash_md5={file_hash_md5}"
+        f"&file_hash_sha256={file_hash_sha256}"
+        f"&fecha_analisis={fecha_analisis}"
+        f"&tiempo_analisis={tiempo_analisis}"
+        f"&total_features={total_features}"
+        f"&dataset_version=FeatureSet v2.3"
+        f"&environment=Flask App v2.0 (Python 3.11)"
+        f"&libraries=Scikit-Learn 1.4 | Pandas 2.2 | NumPy 1.26"
+        f"&top_features={quote(json.dumps(top_features))}"
+    )
+
+    # RETORNO COMPLETO PARA REACT
     return jsonify({
         "clase_dominante": clase_dominante,
         "confianza": confianza_promedio,
@@ -294,7 +314,10 @@ def api_predict():
         "environment": "Flask App v2.0 (Python 3.11)",
         "libraries": "Scikit-Learn 1.4 | Pandas 2.2 | NumPy 1.26",
 
-        "top_features": top_features
+        "top_features": top_features,
+
+        # ← ← ← NUEVO
+        "reporte_url": reporte_url
     })
 
 
@@ -304,7 +327,7 @@ def api_predict():
 @app.route("/report")
 def report():
     data = request.args.to_dict()
-    data["top_features"] = json.loads(data["top_features"])
+    data["top_features"] = json.loads(unquote(data["top_features"]))
     return render_template("report.html", **data)
 
 
