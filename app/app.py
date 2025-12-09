@@ -23,6 +23,8 @@ CORS(app)
 MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_Troyano.pkl"
 ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_Under_Troyano.pkl"
 
+
+
 model = joblib.load(MODEL_PATH)
 label_encoder = joblib.load(ENCODER_PATH)
 clases = label_encoder.classes_
@@ -197,6 +199,7 @@ def predict():
         file_hash_sha256=file_hash_sha256,
         reporte_url=reporte_url
     )
+
 
 
 # ======================================================
