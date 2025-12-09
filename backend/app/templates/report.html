@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reporte de Clasificación</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    padding: 35px 55px;
+    color: #222;
+    background: #ffffff;
+}
+
+@page { 
+    size: A4; 
+    margin: 15mm;
+}
+
+h1 {
+    text-align: center;
+    color: #2155CD;
+    margin-bottom: 25px;
+    font-size: 26px;
+}
+
+/* CAJA PRINCIPAL */
+.box {
+    background: #f7f7f7ff;
+    border: 1px solid #830b0bff;
+    border-radius: 14px;
+    padding: 25px 28px;
+    margin-bottom: 28px;
+
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* TITULO DE CAJA */
+.box-title {
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1c6cdaff;
+}
+
+/* TABLAS */
+.table {
+    width: 100%;
+    font-size: 15px;
+    border-collapse: collapse;
+}
+.table td {
+    padding: 6px;
+    border-bottom: 1px solid #24532dff;
+    
+    word-break: break-all;
+    white-space: normal;
+}
+
+.center { text-align: center; }
+.big-label { font-size: 28px; font-weight: bold; }
+.ransom { color: #e60000; }
+.benign { color: #009900; }
+
+/* MÉTRICAS */
+.metrics-row {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 15px;
+}
+.metric-box {
+    padding: 10px 25px;
+    background: #f4f4f4;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* FEATURES */
+.feature-row td:first-child { width: 60%; }
+
+/* OCULTAR GAUGE */
+#gauge { display: none; }
+
+</style>
+</head>
+
+<body>
+
+<h1>🔍 Reporte de Clasificación</h1>
+
+
+<!-- ==========================================
+     1. RESULTADO DEL ANÁLISIS
+========================================== -->
+<div class="box">
+    <div class="box-title">🏁 Resultado del Análisis</div>
+
+    <!-- LABEL PRINCIPAL SIN NÚMERO ARRIBA -->
+    <p class="center big-label {{ 'ransom' if clase_dominante=='Trojan' else 'benign' }}">
+        {{ clase_dominante }}
+    </p>
+
+    <p class="center">Confianza promedio: <b>{{ confianza_promedio }}%</b></p>
+
+    <!-- MÉTRICAS -->
+    <div class="metrics-row">
+        <div class="metric-box"><b>Precisión</b><br>{{ precision }}%</div>
+        <div class="metric-box"><b>Recall</b><br>{{ recall }}%</div>
+        <div class="metric-box"><b>F1-Score</b><br>{{ f1_score }}%</div>
+    </div>
+
+    <!-- RIESGO -->
+    <p class="center" style="margin-top: 15px;">
+        <b>Nivel de Riesgo:</b>
+        {% if clase_dominante=='Trojan' %}
+            <span style="color:red">Alto 🔥</span>
+        {% else %}
+            <span style="color:green">Bajo 🟢</span>
+        {% endif %}
+    </p>
+</div>
+
+
+<!-- ==========================================
+     2. INFORMACIÓN DEL ARCHIVO
+========================================== -->
+<div class="box">
+    <div class="box-title">📂 Información Técnica del Archivo Analizado</div>
+
+    <table class="table">
+        <tr><td>ID de Análisis:</td><td>{{ file_hash }}</td></tr>
+        <tr><td>Nombre del archivo:</td><td>{{ file_name }}</td></tr>
+        <tr><td>Tamaño del archivo:</td><td>{{ file_size }} KB</td></tr>
+        <tr><td>Tipo de archivo:</td><td>text/csv</td></tr>
+        <tr><td>Hash MD5:</td><td>{{ file_hash_md5 }}</td></tr>
+        <tr><td>Hash SHA256:</td><td>{{ file_hash_sha256 }}</td></tr>
+        <tr><td>Fecha de procesamiento:</td><td>{{ fecha_analisis }}</td></tr>
+    </table>
+</div>
+
+
+<!-- ==========================================
+     3. INFORMACIÓN DEL MODELO
+========================================== -->
+<div class="box">
+    <div class="box-title">🧪 Ficha Técnica del Análisis y del Modelo</div>
+
+    <table class="table">
+        <tr><td>Modelo utilizado:</td><td>RandomForestClassifier – Trojan v1.0</td></tr>
+        <tr><td>Cantidad de características:</td><td>{{ total_features }}</td></tr>
+        <tr><td>Versión del dataset:</td><td>{{ dataset_version }}</td></tr>
+        <tr><td>Tiempo de análisis:</td><td>{{ tiempo_analisis }} s</td></tr>
+        <tr><td>Hash del análisis:</td><td>{{ file_hash }}</td></tr>
+        <tr><td>Entorno:</td><td>{{ environment }}</td></tr>
+        <tr><td>Librerías clave:</td><td>{{ libraries }}</td></tr>
+
+        <tr>
+            <td>Label (clasificación):</td>
+            <td class="{{ 'ransom' if clase_dominante=='Trojan' else 'benign' }}">
+                {% if clase_dominante == 'Trojan' %} 🔴 {% else %} 🟢 {% endif %}
+                {{ clase_dominante }}
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<!-- ==========================================
+     4. TOP FEATURES
+========================================== -->
+<div class="box">
+    <div class="box-title">📊 Top Características Influyentes</div>
+
+    <table class="table">
+        {% for f in top_features %}
+        <tr class="feature-row">
+            <td>{{ f["caracteristica"] }}</td>
+            <td>{{ f["importancia"] }}%</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>
+window.print();
+</script>
+<script>
+window.onload = function () {
+    // Abre el diálogo de impresión automáticamente
+    window.print();
+
+    // Espera unos segundos y cierra la pestaña
+    setTimeout(() => {
+        window.close();
+    }, 500);
+};
+</script>
+
+
+</body>
+</html>

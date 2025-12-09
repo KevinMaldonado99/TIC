@@ -1,0 +1,304 @@
+body {
+    background-color: #0d1117;
+    color: #f0f6fc;
+    font-family: 'Segoe UI', sans-serif;
+    padding: 20px;
+}
+
+.panel {
+    background-color: #161b22;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.left, .right {
+    background-color: #1f242b;
+    border-radius: 5px;
+    padding: 50px;
+    width: 50%;
+}
+
+.alert {
+    background-color:  #5761d1;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+h1 {
+    font-size: 48px;
+    color: #58a6ff;
+    margin: 10px 0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin: 4px 0;
+}
+.gauge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 1px;
+}
+
+#gaugeChart {
+    width: 200px !important;   /* tamaño horizontal */
+    height: 200px !important;  /* tamaño vertical */
+    display: block;
+    margin: 3 auto;
+}
+
+.metrics-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.metric-card {
+    background-color: #1e1f25;
+    border-radius: 8px;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 0 6px rgba(255,255,255,0.05);
+    min-width: 90px;
+}
+
+.metric-card p {
+    font-size: 14px;
+    color: #ccc;
+    margin: 0;
+}
+
+.metric-card h3 {
+    margin: 5px 0 0;
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.analysis-card {
+    background-color: #1e1f25;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ddd;
+}
+
+.analysis-card h4 {
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.analysis-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 10px 0;
+}
+
+.analysis-card li {
+    color: #ccc;
+    margin: 3px 0;
+}
+
+/* ─────────── NIVEL DE RIESGO ─────────── */
+.risk-bar { margin-top: 15px; }
+.bar-container {
+  width: 100%;
+  background-color: #222;
+  border-radius: 10px;
+  height: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.risk-gradient {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.7s ease-in-out;
+}
+
+/* Gradientes dinámicos según clase */
+.risk-gradient.benign {
+  background: linear-gradient(90deg, #00cc66, #ffcc00, #ff3333);
+  
+}
+.risk-gradient.ransomware {
+  background: linear-gradient(90deg, #ff3333, #ff6600, #00cc66);
+}
+
+/* Colores de texto según riesgo */
+.high { color: #ff4d4d; font-weight: bold; }
+.medium { color: #ffa500; font-weight: bold; }
+.low { color: #00cc66; font-weight: bold; }
+
+/* ─────────── LIME BARS ─────────── */
+.lime-bars {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+.lime-bars li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.feature-name {
+  width: 40%;
+  font-size: 0.9em;
+  color: #ccc;
+}
+.bar-bg {
+  background: #333;
+  border-radius: 8px;
+  width: 45%;
+  height: 10px;
+  margin: 0 8px;
+  overflow: hidden;
+}
+
+/* Base para las barras LIME */
+.bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(255,165,0,0.9), rgba(255,200,0,0.9));
+  transition: width 0.5s ease-in-out;
+}
+.percent {
+  font-size: 0.85em;
+  color: #bbb;
+}
+
+.tech-block {
+    background-color: #0f141a;
+    padding: 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #c9d1d9;
+    white-space: pre-wrap;
+    border: 1px solid #2a2f36;
+    margin-bottom: 25px;
+}
+
+/* PANEL FORENSE */
+.forensic-card {
+    background-color: #11161d;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+}
+
+.forensic-title {
+    color: #58a6ff;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+.forensic-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.forensic-table td {
+    padding: 8px 5px;
+    font-size: 14px;
+}
+
+.forensic-table td:first-child {
+    color: #9da5b4;
+    font-weight: bold;
+    width: 40%;
+}
+
+.forensic-table td:last-child {
+    color: #d7e3f1;
+    word-break: break-all;
+}
+
+.forensic-table tr:hover {
+    background-color: #1c222b;
+}
+
+/* ===========================
+   ESTILOS PARA IMPRESIÓN PDF
+   =========================== */
+@media print {
+
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 14px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+
+    .panel, .card, .left, .right {
+        width: 100% !important;
+        padding: 10px !important;
+        margin: 0;
+        background: white !important;
+        box-shadow: none !important;
+    }
+
+    .forensic-card {
+        border: 1px solid #333 !important;
+        background: white !important;
+        color: black !important;
+        padding: 20px !important;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+    }
+
+    .forensic-title {
+        color: black !important;
+        font-weight: bold;
+    }
+
+    .forensic-table td {
+        color: black !important;
+    }
+
+    /* Página A4 */
+    @page {
+        size: A4 portrait;
+        margin: 1.5cm;
+    }
+}
+
+/* Botón PDF */
+.print-button {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.print-button:hover {
+    background-color: #ff3b3b;
+}

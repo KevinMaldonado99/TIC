@@ -1,23 +1,77 @@
-# Entorno virtual
+# ============================
+#   PYTHON / BACKEND
+# ============================
+
+# Entornos virtuales
 env/
+venv/
+ENV/
+.venv/
 
-# Archivos de configuración locales
-*.pyc
+# Cache Python
 __pycache__/
-.DS_Store
+*.pyc
+*.pyo
+*.pyd
 
-# Archivos de datos temporales
+# Archivos temporales
+*.log
 uploads/
 *.csv
 
-# Archivos de modelo pesados (opcional)
+# Modelos pesados (opcional)
 *.pkl
 
-# Notebooks checkpoints
+# Jupyter
 .ipynb_checkpoints/
+*.ipynb
 
-# Archivos de logs
-*.log
+# ============================
+#   FRONTEND (NODE + VITE)
+# ============================
 
-# Archivos del entorno de VSCode
-.vscode/
+# Node modules
+node_modules/
+frontend/node_modules/
+
+# Builds
+dist/
+frontend/dist/
+dist-ssr/
+
+# Vite cache
+.vite/
+frontend/.vite/
+
+# Archivos de ambiente
+.env
+*.env.local
+.env.*.local
+
+# Logs Node
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ============================
+#   EDITORES / SISTEMA
+# ============================
+
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea
+Thumbs.db
+*.suo
+*.njsproj
+*.sln
+*.sw?
+
+# ============================
+#   ARCHIVOS QUE NO DEBEN SUBIRSE
+# ============================
+
+# Carpeta de entorno virtual creado por VSCode
+.python_env/

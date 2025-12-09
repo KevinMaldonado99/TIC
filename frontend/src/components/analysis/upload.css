@@ -1,0 +1,210 @@
+.upload-container {
+  padding-top: 15px;
+  text-align: center;
+  color: white;
+}
+
+.main-title {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.upload-label {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.upload-input {
+  padding: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+}
+
+.upload-button {
+  margin-top: 15px;
+  padding: 12px 25px;
+  background: #1e90ff;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  color: white;
+}
+
+.upload-button:hover {
+  background: #1579d8;
+}
+
+.loading {
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+/* === Loader circular estilo Malware-AI === */
+.scan-loader {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.outer-circle, .inner-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.08);
+}
+
+.outer-circle {
+  width: 260px;
+  height: 260px;
+  animation: rotateOuter 6s linear infinite;
+  border-top-color: rgba(255, 0, 255, 0.6);
+}
+
+.inner-circle {
+  width: 200px;
+  height: 200px;
+  animation: rotateInner 4s linear infinite reverse;
+  border-right-color: rgba(0, 153, 255, 0.6);
+}
+
+@keyframes rotateOuter {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotateInner {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+/* Arrow */
+.arrow {
+  position: absolute;
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.7);
+  animation: arrowPulse 1.4s infinite ease-in-out;
+}
+
+@keyframes arrowPulse {
+  0% { opacity: 0.4; transform: translateY(6px); }
+  50% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0.4; transform: translateY(6px); }
+}
+
+/* Text below */
+.scan-text {
+  position: absolute;
+  bottom: -35px;
+  color: white;
+  font-size: 20px;
+  opacity: 0.9;
+  text-shadow: 0 0 8px #b100ff;
+}
+
+
+/* Usar la fuente estilo hacker VT323 */
+.upload-container,
+.upload-container * {
+    font-family: 'VT323', monospace !important;
+    letter-spacing: 1px;
+}
+
+/* === LOADER ANIMADO === */
+
+.scan-loader {
+  top: 20px;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.scan-loader:hover {
+  transform: scale(1.04);
+}
+
+.scan-inner-circle,
+.scan-outer-circle {
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  position: absolute;
+}
+
+.scan-inner-circle {
+  width: 180px;
+  height: 180px;
+  top: 40px;
+  left: 40px;
+}
+
+.scan-outer-circle {
+  width: 260px;
+  height: 260px;
+  top: 0;
+  left: 0;
+  animation: rotateBorder 3s linear infinite;
+  border-top: 3px solid #1e90ff;
+  border-right: 3px solid #b100ff;
+}
+
+@keyframes rotateBorder {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.scan-arrow {
+  position: absolute;
+  top: 110px;
+  left: 123px;
+  font-size: 38px;
+  opacity: 0.7;
+  user-select: none;
+}
+
+/* === DESCRIPCIÓN === */
+.upload-description {
+  width: 60%;
+  margin: 30px auto;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.85;
+  animation: fadeIn 1.2s ease-out;
+}
+
+.desc-small {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.loading {
+  margin-top: 15px;
+  font-size: 20px;
+  animation: fadeIn 0.6s ease-out infinite alternate;
+}
+
+.error-box {
+  margin-top: 20px;
+  padding: 12px 18px;
+  background: rgba(255, 50, 50, 0.2);
+  border: 1px solid #ff4d4d;
+  color: #ff6666;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: center;
+  backdrop-filter: blur(6px);
+}

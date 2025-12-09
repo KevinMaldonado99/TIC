@@ -1,0 +1,376 @@
+.dashboard-container {
+  height: 100px;
+  padding-bottom: 50px;
+  background-size: cover;
+  background-position: center;
+}
+
+
+.dashboard-title {
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Cards base */
+.card {
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 16px;
+  padding: 50px;
+  backdrop-filter: blur(6px);
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Result label */
+.result-label {
+  display: inline-block;
+  padding: 1px 60px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;   /* ⭐ AGREGA ESTA LÍNEA */
+}
+
+.result-label.benign {
+  background: #3fcf4c;
+  color: black;
+}
+
+.result-label.Trojan {
+  background: #ff4c4c;
+  color: white;
+}
+
+/* Gauge */
+.gauge {
+  width: 250px;
+  height: 125px;
+  position: relative;
+  margin: 20px auto;
+}
+
+.gauge-center {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  background: transparent;
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 40px;
+}
+
+.gauge-fill {
+  width: 100%;
+  height: 100%;
+  background: red;
+  position: absolute;
+  transform-origin: center bottom;
+  border-radius: 100px 100px 0 0;
+  transition: 0.4s;
+}
+
+.gauge-cover {
+  width: 180px;
+  height: 90px;
+  background: rgba(10, 10, 30, 1);
+  border-radius: 100px 100px 0 0;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Metrics */
+.metrics-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.metric-card {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px 20px;
+  border-radius: 12px;
+}
+
+/* Risk bar */
+.risk-section {
+  margin-top: 20px;
+}
+
+.risk-bar {
+  width: 100%;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.risk-fill {
+  height: 100%;
+  border-radius: 12px;
+  transition: width 0.5s ease-in-out;
+}
+
+
+.risk-red {
+  background: red;
+}
+
+.risk-green {
+  background: #00cc66;
+}
+
+/* Grid info */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Features list */
+.features-list {
+  list-style: none;
+  padding: 0;
+}
+
+.feature-item {
+  margin-bottom: 12px;
+}
+
+.bar-bg {
+  background: rgba(255, 255, 255, 0.2);
+  height: 8px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  background: gold;
+  border-radius: 6px;
+}
+
+/* PDF Button */
+.pdf-button {
+  padding: 2px 10px;
+  background: #da31e3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.pdf-button:hover {
+  filter: brightness(1.15);
+}
+
+
+/* === GRID 2×2 === */
+.grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 7px;
+  width: 100%;     /* ANCHO COMPLETO */
+  max-width: 1600px; /* PARA QUE TODO QUEPA */
+  margin: 0 auto;  /* CENTRAR EN FONDO */
+  padding: 0 20px; /* un poco de espacio lateral */
+}
+
+
+/* Panel genérico */
+.panel {
+  background: rgba(0,0,0,0.35);
+  padding: 15px 20px;     /* antes era 20-25 → lo REDUCIMOS */
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  color: white;
+}
+
+
+/* Panel gauge centrado */
+.panel-gauge {
+  text-align: center;
+}
+
+.panel-features .feature-item {
+  margin: 1px 0;
+  font-size: 12px;      /* más pequeño */
+}
+
+.panel-features .bar-bg {
+  height: 5px;
+}
+
+.panel-features .percent {
+  font-size: 12px;
+}
+
+
+/* Ajustar tabla */
+.info-table td {
+  padding: 3px 6px;
+  font-size: 13px;
+}
+
+
+.grid-custom {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* izquierda y derecha */
+  gap: 20px;
+  width: 100%;
+}
+
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.right-column {
+  height: 100%;
+}
+
+.panel-info-model {
+  padding: 20px;
+}
+
+
+/* PDF */
+.pdf-container {
+  width: 1460px;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.pdf-button {
+  padding: 7px 25px;
+  font-size: 12px;
+  background: #B100FF;
+  border: none;
+  border-radius: 12px;
+  color: white;
+  cursor: pointer;
+}
+
+.pdf-button:hover {
+  background: #be69e3;
+}
+
+
+
+/* -----------------------------
+   TABLAS FORENSES
+--------------------------------*/
+.clean-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1px;
+}
+
+.clean-table th {
+  text-align: left;
+  color: #d63016;
+  width: 35%;
+  font-size: 2px;
+  padding: 6px 0;
+}
+
+.clean-table td {
+  text-align: left;
+  color: #ffffff;
+  opacity: 0.9;
+  font-size: 14px;
+  padding: 1.5px 0;
+}
+
+.clean-table tr {
+  border-bottom: 1px solid rgb(38, 30, 148);
+}
+
+.dashboard-container, 
+.panel, 
+.metric-card, 
+.features-list, 
+.info-table, 
+.pdf-button {
+  font-family: 'VT323', monospace;
+}
+
+.section-title {
+  font-family: 'VT323', monospace;
+  font-size: 17px;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 1px;
+
+  color: #ffffff;
+  text-shadow:
+    0 0 6px rgba(255, 0, 255, 0.6),
+    0 0 12px rgba(255, 0, 255, 0.5),
+    0 0 18px rgba(255, 0, 255, 0.4);
+  
+  transition: 0.3s ease-in-out;
+}
+
+.section-title.trojan-title {
+  text-shadow:
+    0 0 6px rgba(177, 0, 255, 0.7),
+    0 0 12px rgba(177, 0, 255, 0.6),
+    0 0 20px rgba(177, 0, 255, 0.5);
+}
+
+.section-title.benign-title {
+  text-shadow:
+    0 0 6px rgba(30, 144, 255, 0.7),
+    0 0 12px rgba(30, 144, 255, 0.6),
+    0 0 20px rgba(30, 144, 255, 0.5);
+}
+
+
+.label-trojan {
+  box-shadow:
+    0 0 12px rgba(177, 0, 255, 0.9),
+    0 0 24px rgba(177, 0, 255, 0.7),
+    0 0 36px rgba(177, 0, 255, 0.5);
+}
+
+.label-benign {
+  box-shadow:
+    0 0 12px rgba(30, 144, 255, 0.9),
+    0 0 24px rgba(30, 144, 255, 0.7),
+    0 0 36px rgba(30, 144, 255, 0.5);
+}
+
+
+/* Glow para el GAUGE – modo Trojan */
+.gauge-trojan svg {
+  filter: drop-shadow(0 0 4px rgba(177, 0, 255, 0.9))
+          drop-shadow(0 0 1px rgba(177, 0, 255, 0.7))
+          drop-shadow(0 0 2px rgba(177, 0, 255, 0.5));
+}
+
+/* Glow para el GAUGE – modo Benign */
+.gauge-benign svg {
+  filter: drop-shadow(0 0 4px rgba(30, 144, 255, 0.9))
+          drop-shadow(0 0 1px rgba(30, 144, 255, 0.7))
+          drop-shadow(0 0 2px rgba(30, 144, 255, 0.5));
+}
+
+/* Asegura que los SVG del gauge sean afectados */
+.gauge-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
