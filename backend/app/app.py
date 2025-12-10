@@ -20,8 +20,8 @@ CORS(app)
 # ================================
 # CARGA DE MODELOS
 # ================================
-MODEL_PATH = "../app/models/RF UnderSampling/modelo_RF_Under_Troyano.pkl"
-ENCODER_PATH = "../app/models/RF UnderSampling/label_encoder_RF_Under_Troyano.pkl"
+MODEL_PATH = "../app/models/Pkls/modelo_RF_SMOTE.pkl"
+ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_SMOTE.pkl"
 
 
 
