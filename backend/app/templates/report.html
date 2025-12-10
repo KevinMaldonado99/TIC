@@ -97,7 +97,7 @@ h1 {
     <div class="box-title">🏁 Resultado del Análisis</div>
 
     <!-- LABEL PRINCIPAL SIN NÚMERO ARRIBA -->
-    <p class="center big-label {{ 'ransom' if clase_dominante=='Trojan' else 'benign' }}">
+    <p class="center big-label {{ 'ransom' if clase_dominante=='Ransomware' else 'benign' }}">
         {{ clase_dominante }}
     </p>
 
@@ -113,7 +113,7 @@ h1 {
     <!-- RIESGO -->
     <p class="center" style="margin-top: 15px;">
         <b>Nivel de Riesgo:</b>
-        {% if clase_dominante=='Trojan' %}
+        {% if clase_dominante=='Ransomware' %}
             <span style="color:red">Alto 🔥</span>
         {% else %}
             <span style="color:green">Bajo 🟢</span>
@@ -147,7 +147,7 @@ h1 {
     <div class="box-title">🧪 Ficha Técnica del Análisis y del Modelo</div>
 
     <table class="table">
-        <tr><td>Modelo utilizado:</td><td>RandomForestClassifier – Trojan v1.0</td></tr>
+        <tr><td>Modelo utilizado:</td><td>RandomForestClassifier – Ransomware v1.0</td></tr>
         <tr><td>Cantidad de características:</td><td>{{ total_features }}</td></tr>
         <tr><td>Versión del dataset:</td><td>{{ dataset_version }}</td></tr>
         <tr><td>Tiempo de análisis:</td><td>{{ tiempo_analisis }} s</td></tr>
@@ -157,8 +157,8 @@ h1 {
 
         <tr>
             <td>Label (clasificación):</td>
-            <td class="{{ 'ransom' if clase_dominante=='Trojan' else 'benign' }}">
-                {% if clase_dominante == 'Trojan' %} 🔴 {% else %} 🟢 {% endif %}
+            <td class="{{ 'ransom' if clase_dominante=='Ransomware' else 'benign' }}">
+                {% if clase_dominante == 'Ransomware' %} 🔴 {% else %} 🟢 {% endif %}
                 {{ clase_dominante }}
             </td>
         </tr>

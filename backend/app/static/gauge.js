@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function() {
         // Color según la clase dominante
         let color;
         if (clase === "Ransomware") color = "#d73a49";       // Rojo intenso
-        else if (clase === "Trojan") color = "#f39c12";      // Naranja
+        else if (clase === "Ransomware") color = "#f39c12";      // Naranja
         else color = "#4CAF50";                              // Verde (Benigno)
 
         // Plugin para mostrar el texto centrado en el gauge
