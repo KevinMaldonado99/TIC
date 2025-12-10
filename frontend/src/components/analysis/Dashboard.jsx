@@ -32,7 +32,7 @@ export default function Dashboard({ data }) {
   const gaugeValue = confianza;
 
   const benignColor = "#1E90FF";
-  const trojanColor = "#B100FF";
+  const RansomwareColor = "#B100FF";
 
   const riskColors = {
     Bajo: "#64ebe5",
@@ -49,7 +49,7 @@ export default function Dashboard({ data }) {
         <div className="panel panel-gauge">
           <h2
             className={`section-title ${
-              clase_dominante === "Trojan" ? "trojan-title" : "benign-title"
+              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
             }`}
           >
             RESULTADO DEL ANÁLISIS
@@ -57,7 +57,7 @@ export default function Dashboard({ data }) {
 
 <span
   className={`result-label ${
-    clase_dominante === "Trojan" ? "label-trojan" : "label-benign"
+    clase_dominante === "Ransomware" ? "label-Ransomware" : "label-benign"
   }`}
 >
   {clase_dominante}
@@ -108,7 +108,7 @@ export default function Dashboard({ data }) {
         <div className="panel panel-features">
           <h2
             className={`section-title ${
-              clase_dominante === "Trojan" ? "trojan-title" : "benign-title"
+              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
             }`}
           >
             TOP CARACTERÍSTICAS INFLUYENTES
@@ -125,8 +125,8 @@ export default function Dashboard({ data }) {
                     style={{
                       width: `${f.importancia}%`,
                       background:
-                        clase_dominante === "Trojan"
-                          ? trojanColor
+                        clase_dominante === "Ransomware"
+                          ? RansomwareColor
                           : benignColor,
                     }}
                   ></div>
@@ -142,7 +142,7 @@ export default function Dashboard({ data }) {
         <div className="panel panel-file">
           <h2
             className={`section-title ${
-              clase_dominante === "Trojan" ? "trojan-title" : "benign-title"
+              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
             }`}
           >
             INFORMACIÓN TÉCNICA DEL ARCHIVO ANALIZADO
@@ -182,7 +182,7 @@ export default function Dashboard({ data }) {
         <div className="panel panel-model">
           <h2
             className={`section-title ${
-              clase_dominante === "Trojan" ? "trojan-title" : "benign-title"
+              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
             }`}
           >
             FICHA TÉCNICA DEL ANÁLISIS Y DEL MODELO
@@ -214,9 +214,9 @@ export default function Dashboard({ data }) {
               <tr>
                 <td>Label:</td>
                 <td>
-                  {clase_dominante === "Trojan" && (
+                  {clase_dominante === "Ransomware" && (
                     <span style={{ color: "#ff4d4d", fontWeight: "bold" }}>
-                      Trojan
+                      Ransomware
                     </span>
                   )}
                   {clase_dominante === "Benign" && (
@@ -240,9 +240,9 @@ export default function Dashboard({ data }) {
             className="pdf-button"
             style={{
               backgroundColor:
-                clase_dominante === "Trojan" ? trojanColor : benignColor,
+                clase_dominante === "Ransomware" ? RansomwareColor : benignColor,
               boxShadow:
-                clase_dominante === "Trojan"
+                clase_dominante === "Ransomware"
                   ? "0 0 18px rgba(177, 0, 255, 0.7)"
                   : "0 0 18px rgba(30, 144, 255, 0.7)",
             }}

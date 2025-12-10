@@ -8,11 +8,11 @@ export default function Gauge({ value, clase }) {
   const ransomColor = "#B100FF";
   const ransomLight = "#B100FF";
 
-  const baseColor = clase === "Trojan" ? ransomColor : benignColor;
-  const lightColor = clase === "Trojan" ? ransomLight : benignLight;
+  const baseColor = clase === "Ransomware" ? ransomColor : benignColor;
+  const lightColor = clase === "Ransomware" ? ransomLight : benignLight;
 
   return (
-    <div className={`gauge-wrapper ${clase === "Trojan" ? "gauge-trojan" : "gauge-benign"}`}>
+    <div className={`gauge-wrapper ${clase === "Ransomware" ? "gauge-Ransomware" : "gauge-benign"}`}>
       <GaugeComponent
         value={value}
         minValue={0}

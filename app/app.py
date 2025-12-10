@@ -71,7 +71,7 @@ def predict():
                 return jsonify({
                     "status": "error",
                     "message": f"El archivo no contiene la columna requerida: '{col}'. "
-                            "Por favor sube un CSV válido del dominio Benign/Trojan."
+                            "Por favor sube un CSV válido del dominio Benign/Ransomware."
                 }), 400
 
         # 2. Extraer únicamente las columnas necesarias
@@ -109,7 +109,7 @@ def predict():
     if confianza_promedio < 75:
         return jsonify({
             "status": "error",
-            "message": "El archivo no pertenece al dominio del modelo (Benign/Trojan). "
+            "message": "El archivo no pertenece al dominio del modelo (Benign/Ransomware). "
                     "La confianza es demasiado baja para generar un resultado confiable.",
             "confianza": confianza_promedio
         }), 400
@@ -123,8 +123,8 @@ def predict():
 
     precision = round(confianza_promedio, 2)
 
-    if clase_dominante == "Trojan":
-        positivos = sum([1 for c in y_pred_labels if c == "Trojan"])
+    if clase_dominante == "Ransomware":
+        positivos = sum([1 for c in y_pred_labels if c == "Ransomware"])
     elif clase_dominante == "Benign":
         positivos = sum([1 for c in y_pred_labels if c == "Benign"])
     else:
@@ -241,7 +241,7 @@ def api_predict():
                 return jsonify({
                     "status": "error",
                     "message": f"El archivo no contiene la columna requerida: '{col}'. "
-                            "Por favor sube un CSV válido del dominio Benign/Trojan."
+                            "Por favor sube un CSV válido del dominio Benign/Ransomware."
                 }), 400
 
         # 2. Extraer únicamente las columnas necesarias
@@ -282,7 +282,7 @@ def api_predict():
     if confianza_promedio < 75:
         return jsonify({
             "status": "error",
-            "message": "El archivo no pertenece al dominio del modelo (Benign/Trojan). "
+            "message": "El archivo no pertenece al dominio del modelo (Benign/Ransomware). "
                     "La confianza es demasiado baja para generar un resultado confiable.",
             "confianza": confianza_promedio
         }), 400
@@ -296,8 +296,8 @@ def api_predict():
 
     precision = round(confianza_promedio, 2)
 
-    if clase_dominante == "Trojan":
-        positivos = sum([1 for c in y_pred_labels if c == "Trojan"])
+    if clase_dominante == "Ransomware":
+        positivos = sum([1 for c in y_pred_labels if c == "Ransomware"])
     elif clase_dominante == "Benign":
         positivos = sum([1 for c in y_pred_labels if c == "Benign"])
     else:
@@ -361,8 +361,8 @@ def api_predict():
         "resultado_porcentajes": porcentajes.to_dict(),
 
         "nivel_riesgo": (
-            "Alto" if clase_dominante == "Trojan" and confianza_promedio >= 90 else
-            "Medio" if clase_dominante == "Trojan" and confianza_promedio >= 70 else
+            "Alto" if clase_dominante == "Ransomware" and confianza_promedio >= 90 else
+            "Medio" if clase_dominante == "Ransomware" and confianza_promedio >= 70 else
             "Bajo"
         ),
 

@@ -39,7 +39,7 @@
   color: black;
 }
 
-.result-label.Trojan {
+.result-label.Ransomware {
   background: #ff4c4c;
   color: white;
 }
@@ -324,7 +324,7 @@
   transition: 0.3s ease-in-out;
 }
 
-.section-title.trojan-title {
+.section-title.Ransomware-title {
   text-shadow:
     0 0 6px rgba(177, 0, 255, 0.7),
     0 0 12px rgba(177, 0, 255, 0.6),
@@ -339,7 +339,7 @@
 }
 
 
-.label-trojan {
+.label-Ransomware {
   box-shadow:
     0 0 12px rgba(177, 0, 255, 0.9),
     0 0 24px rgba(177, 0, 255, 0.7),
@@ -354,8 +354,8 @@
 }
 
 
-/* Glow para el GAUGE – modo Trojan */
-.gauge-trojan svg {
+/* Glow para el GAUGE – modo Ransomware */
+.gauge-Ransomware svg {
   filter: drop-shadow(0 0 4px rgba(177, 0, 255, 0.9))
           drop-shadow(0 0 1px rgba(177, 0, 255, 0.7))
           drop-shadow(0 0 2px rgba(177, 0, 255, 0.5));

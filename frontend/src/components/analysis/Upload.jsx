@@ -71,7 +71,7 @@ export default function Upload() {
       {/* MOSTRAR LOADER SI NO HAY RESULTADO */}
       {!result && (
         <>
-          <h1 className="main-title">Clasificación de Trojan vs Benigno</h1>
+          <h1 className="main-title">Clasificación de Ransomware vs Benigno</h1>
 
           <p className="upload-subtitle">
             Haz clic en el círculo para subir un archivo
@@ -96,7 +96,7 @@ export default function Upload() {
           {/* DESCRIPCIÓN */}
           <p className="upload-description">
             Este analizador utiliza modelos avanzados de Machine Learning para identificar
-            patrones asociados a malware tipo <b>Trojan</b>.
+            patrones asociados a malware tipo <b>Ransomware</b>.
             <br /><br />
             Al subir un archivo <b>.CSV</b>, el sistema procesará sus características,
             calculará el nivel de riesgo y mostrará un reporte técnico detallado.
