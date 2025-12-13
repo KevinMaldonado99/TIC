@@ -42,218 +42,151 @@ export default function Dashboard({ data }) {
 
   return (
     <div className="dashboard-container">
-      {/* === GRID 2 × 2 REAL === */}
-      <div className="grid-2x2">
-        {/* PANEL 1 */}
 
-        <div className="panel panel-gauge">
-          <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
-            }`}
-          >
-            RESULTADO DEL ANÁLISIS
-          </h2>
+  {/* =============================
+       FILA 1 — PANEL GAUGE + PANEL FEATURES
+  ============================== */}
+  <div className="row-top">
+    {/* PANEL 1 */}
+    <div className="panel panel-gauge">
+      <h2 className={`section-title ${clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"}`}>
+        RESULTADO DEL ANÁLISIS
+      </h2>
 
-<span
-  className={`result-label ${
-    clase_dominante === "Ransomware" ? "label-Ransomware" : "label-benign"
-  }`}
->
-  {clase_dominante}
-</span>
+      <span className={`result-label ${clase_dominante === "Ransomware" ? "label-Ransomware" : "label-benign"}`}>
+        {clase_dominante}
+      </span>
 
+      <Gauge value={gaugeValue} clase={clase_dominante} />
 
-          <Gauge value={gaugeValue} clase={clase_dominante} />
+      <p className="risk-label">
+        <b>Nivel de Riesgo:</b>{" "}
+        <span style={{ color: riskColors[nivel_riesgo] }}>
+          {nivel_riesgo}
+        </span>
+      </p>
 
-          <p className="confidence-text">Confianza promedio del modelo</p>
-
-          <div className="metrics-grid">
-            <div className="metric-card">
-              <p>Precisión</p>
-              <h3>{precision?.toFixed(2)}%</h3>
-            </div>
-            <div className="metric-card">
-              <p>Recall</p>
-              <h3>{recall?.toFixed(2)}%</h3>
-            </div>
-            <div className="metric-card">
-              <p>F1-Score</p>
-              <h3>{f1_score?.toFixed(2)}%</h3>
-            </div>
-          </div>
-
-          <p className="risk-label">
-            <b>Nivel de Riesgo:</b>{" "}
-            <span style={{ color: riskColors[nivel_riesgo] }}>
-              {nivel_riesgo}
-            </span>
-          </p>
-
-          <div className="risk-bar">
-            <div
-              className="risk-fill"
-              style={{
-                width: `${gaugeValue}%`,
-                background:
-                  nivel_riesgo === "Alto"
-                    ? "linear-gradient(90deg, #000000 0%, #bbbbbb 40%, #B100FF 100%)"
-                    : "linear-gradient(90deg, #000000 0%, #e0e0e0 40%, #64ebe5 100%)",
-              }}
-            ></div>
-          </div>
-        </div>
-
-        {/* PANEL 2 — FEATURES */}
-        <div className="panel panel-features">
-          <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
-            }`}
-          >
-            TOP CARACTERÍSTICAS INFLUYENTES
-          </h2>
-
-          <ul className="features-list">
-            {top_features.map((f, i) => (
-              <li key={i} className="feature-item">
-                <span>{f.caracteristica}</span>
-
-                <div className="bar-bg">
-                  <div
-                    className="bar-fill"
-                    style={{
-                      width: `${f.importancia}%`,
-                      background:
-                        clase_dominante === "Ransomware"
-                          ? RansomwareColor
-                          : benignColor,
-                    }}
-                  ></div>
-                </div>
-
-                <span className="percent">{f.importancia}%</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* PANEL 3 — ARCHIVO */}
-        <div className="panel panel-file">
-          <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
-            }`}
-          >
-            INFORMACIÓN TÉCNICA DEL ARCHIVO ANALIZADO
-          </h2>
-
-          <table className="info-table clean-table">
-            <tbody>
-              <tr>
-                <td>Archivo:</td>
-                <td>{file_name}</td>
-              </tr>
-              <tr>
-                <td>Tipo:</td>
-                <td>text/csv</td>
-              </tr>
-              <tr>
-                <td>Tamaño:</td>
-                <td>{file_size} KB</td>
-              </tr>
-              <tr>
-                <td>Fecha:</td>
-                <td>{fecha_analisis}</td>
-              </tr>
-              <tr>
-                <td>Hash MD5:</td>
-                <td>{hash_md5}</td>
-              </tr>
-              <tr>
-                <td>Hash SHA256:</td>
-                <td>{hash_sha256}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* PANEL 4 — MODELO */}
-        <div className="panel panel-model">
-          <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
-            }`}
-          >
-            FICHA TÉCNICA DEL ANÁLISIS Y DEL MODELO
-          </h2>
-
-          <table className="info-table clean-table">
-            <tbody>
-              <tr>
-                <td>ID análisis:</td>
-                <td>{file_hash}</td>
-              </tr>
-              <tr>
-                <td>Total características:</td>
-                <td>{total_features}</td>
-              </tr>
-              <tr>
-                <td>Dataset:</td>
-                <td>{dataset_version}</td>
-              </tr>
-              <tr>
-                <td>Tiempo:</td>
-                <td>{tiempo_analisis} s</td>
-              </tr>
-              <tr>
-                <td>Librerías:</td>
-                <td>{libraries}</td>
-              </tr>
-
-              <tr>
-                <td>Label:</td>
-                <td>
-                  {clase_dominante === "Ransomware" && (
-                    <span style={{ color: "#ff4d4d", fontWeight: "bold" }}>
-                      Ransomware
-                    </span>
-                  )}
-                  {clase_dominante === "Benign" && (
-                    <span style={{ color: "#00cc66", fontWeight: "bold" }}>
-                      Benign
-                    </span>
-                  )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div className="risk-bar">
+        <div
+          className="risk-fill"
+          style={{
+            width: `${gaugeValue}%`,
+            background:
+              nivel_riesgo === "Alto"
+                ? "linear-gradient(90deg, #000000 0%, #bbbbbb 40%, #B100FF 100%)"
+                : "linear-gradient(90deg, #000000 0%, #e0e0e0 40%, #64ebe5 100%)",
+          }}
+        ></div>
       </div>
-
-      {/* =======================================
-          BOTÓN PDF (NUEVO)
-      ======================================= */}
-      {reporte_url && (
-        <div className="pdf-container">
-          <button
-            className="pdf-button"
-            style={{
-              backgroundColor:
-                clase_dominante === "Ransomware" ? RansomwareColor : benignColor,
-              boxShadow:
-                clase_dominante === "Ransomware"
-                  ? "0 0 18px rgba(177, 0, 255, 0.7)"
-                  : "0 0 18px rgba(30, 144, 255, 0.7)",
-            }}
-            onClick={() =>
-              window.open(`http://localhost:5000${reporte_url}`, "_blank")
-            }
-          >
-            🖨️ Generar Reporte PDF
-          </button>
-        </div>
-      )}
     </div>
+
+    {/* PANEL 2 — FEATURES */}
+    <div className="panel panel-features">
+      <h2
+        className={`section-title ${
+          clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
+        }`}
+      >
+        TOP CARACTERÍSTICAS INFLUYENTES
+      </h2>
+
+      <ul className="features-list">
+        {top_features.map((f, i) => (
+          <li key={i} className="feature-item">
+            <span>{f.caracteristica}</span>
+            <div className="bar-bg">
+              <div
+                className="bar-fill"
+                style={{
+                  width: `${f.importancia}%`,
+                  background:
+                    clase_dominante === "Ransomware"
+                      ? "#B100FF"
+                      : "#1E90FF",
+                }}
+              ></div>
+            </div>
+            <span className="percent">{f.importancia}%</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+
+  {/* =============================
+       FILA 2 — SOLO PANEL DEL MODELO (CENTRADO)
+  ============================== */}
+  <div className="row-bottom">
+    <div className="panel panel-model centered-panel">
+      <h2
+        className={`section-title ${
+          clase_dominante === "Ransomware" ? "Ransomware-title" : "benign-title"
+        }`}
+      >
+        FICHA TÉCNICA DEL ANÁLISIS Y DEL MODELO
+      </h2>
+
+      <table className="info-table clean-table centered-table">
+        <tbody>
+          <tr>
+            <td>ID análisis:</td>
+            <td>{file_hash}</td>
+          </tr>
+          <tr>
+            <td>Total características:</td>
+            <td>{total_features}</td>
+          </tr>
+          <tr>
+            <td>Dataset:</td>
+            <td>{dataset_version}</td>
+          </tr>
+          <tr>
+            <td>Tiempo:</td>
+            <td>{tiempo_analisis} s</td>
+          </tr>
+          <tr>
+            <td>Modelo:</td>
+            <td>SMOTE</td>
+          </tr>
+
+          <tr>
+            <td>Clasificación:</td>
+            <td>
+              {clase_dominante === "Ransomware" ? (
+                <span style={{ color: "#ff4d4d", fontWeight: "bold" }}>
+                  Ransomware
+                </span>
+              ) : (
+                <span style={{ color: "#00cc66", fontWeight: "bold" }}>
+                  Benign
+                </span>
+              )}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {/* BOTÓN PDF */}
+  {reporte_url && (
+    <div className="pdf-container">
+      <button
+        className="pdf-button"
+        style={{
+          backgroundColor:
+            clase_dominante === "Ransomware" ? "#B100FF" : "#1E90FF",
+        }}
+        onClick={() =>
+          window.open(`http://localhost:5000${reporte_url}`, "_blank")
+        }
+      >
+        🖨️ Generar Reporte PDF
+      </button>
+    </div>
+  )}
+
+</div>
+
   );
 }

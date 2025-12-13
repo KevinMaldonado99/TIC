@@ -144,7 +144,7 @@ def predict():
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
-    indices = np.argsort(ajuste)[::-1][:8]
+    indices = np.argsort(ajuste)[::-1][:7]
 
     top_features = [
     {
@@ -315,7 +315,7 @@ def api_predict():
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
-    indices = np.argsort(ajuste)[::-1][:8]
+    indices = np.argsort(ajuste)[::-1][:7]
 
     top_features = [
         {
