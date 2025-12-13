@@ -66,9 +66,9 @@ export default function Dashboard({ data }) {
 
           <Gauge value={gaugeValue} clase={clase_dominante} />
 
-          <p className="confidence-text">Confianza promedio del modelo</p>
+          {/*<p className="confidence-text">Confianza promedio del modelo</p>
 
-          <div className="metrics-grid">
+            <div className="metrics-grid">
             <div className="metric-card">
               <p>Precisión</p>
               <h3>{precision?.toFixed(2)}%</h3>
@@ -81,7 +81,7 @@ export default function Dashboard({ data }) {
               <p>F1-Score</p>
               <h3>{f1_score?.toFixed(2)}%</h3>
             </div>
-          </div>
+          </div>*/}
 
           <p className="risk-label">
             <b>Nivel de Riesgo:</b>{" "}
@@ -207,12 +207,12 @@ export default function Dashboard({ data }) {
                 <td>{tiempo_analisis} s</td>
               </tr>
               <tr>
-                <td>Librerías:</td>
-                <td>{libraries}</td>
-              </tr>
+                <td>Modelo:</td>
+                <td>RandomForest</td>
+              </tr> 
 
               <tr>
-                <td>Label:</td>
+                <td>Clasificación:</td>
                 <td>
                   {clase_dominante === "Trojan" && (
                     <span style={{ color: "#ff4d4d", fontWeight: "bold" }}>
