@@ -1,4 +1,4 @@
-# 🧬 TIC – Malware Classifier (Trojan / Ransomware vs Benign)
+# 🧬 TIC – Malware Classifier ( Ransomware vs Benign)
 
 Sistema de análisis estático basado en Machine Learning para clasificar archivos PE en categorías de **Malware** (Trojan o Ransomware, según la rama seleccionada) y **Benignos**.
 
