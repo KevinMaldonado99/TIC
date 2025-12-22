@@ -18,10 +18,10 @@ warnings.filterwarnings("ignore")
 app = Flask(__name__)
 CORS(app)
 
-# ================================
-# CARGA DE MODELOS
-# ================================
+
+#**** CARGA DEL MODELO Y EL CODIFICADOR EN FORMATO PKL ****
 MODEL_PATH = "../app/models/Pkls/modelo_RF_SMOTE.pkl"
+
 ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_SMOTE.pkl"
 
 
@@ -89,10 +89,14 @@ def predict():
             "error": str(e)
         }), 400
 
-    # === PREDICCIÓN ===
+  
     start = time.time()
+    
+      # === PREDICCIÓN ===
     y_pred = model.predict(X)
     y_pred_labels = label_encoder.inverse_transform(y_pred)
+    
+    
     tiempo_analisis = round(time.time() - start, 2)
 
     pred_counts = pd.Series(y_pred_labels).value_counts()
@@ -107,6 +111,8 @@ def predict():
         conf.append(y_pred_proba[i][idx])
     confianza_promedio = round(float(np.mean(conf)) * 100, 2)
     
+    
+    
     if confianza_promedio < 75:
         return jsonify({
             "status": "error",
@@ -116,9 +122,9 @@ def predict():
         }), 400
 
 
-    # ======================================================
+    
     # ========== MÉTRICAS SINTÉTICAS DINÁMICAS ============
-    # ======================================================
+ 
 
     total_preds = len(y_pred_labels)
 
@@ -139,9 +145,9 @@ def predict():
         else 0.0
     )
 
-    # ======================================================
+   
     # ================ TOP FEATURES ========================
-    # ======================================================
+
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
@@ -316,7 +322,7 @@ def api_predict():
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
-    indices = np.argsort(ajuste)[::-1][:7]
+    indices = np.argsort(ajuste)[::-1][:5]
 
     top_features = [
         {

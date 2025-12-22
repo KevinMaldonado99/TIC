@@ -71,10 +71,10 @@ export default function Upload() {
       {/* MOSTRAR LOADER SI NO HAY RESULTADO */}
       {!result && (
         <>
-          <h1 className="main-title">Clasificación de Ransomware vs Benigno</h1>
+          <h1 className="main-title">Análisis de Archivos para Detección de Ransomware</h1>
 
           <p className="upload-subtitle">
-            Haz clic en el círculo para subir un archivo
+            Haz clic aquí para subir tu archivo en formato CSV.
           </p>
 
           {/* === LOADER INTERACTIVO === */}
@@ -95,16 +95,14 @@ export default function Upload() {
 
           {/* DESCRIPCIÓN */}
           <p className="upload-description">
-            Este analizador utiliza modelos avanzados de Machine Learning para identificar
-            patrones asociados a malware tipo <b>Ransomware</b>.
-            <br /><br />
-            Al subir un archivo <b>.CSV</b>, el sistema procesará sus características,
-            calculará el nivel de riesgo y mostrará un reporte técnico detallado.
-            <br /><br />
-            <span className="desc-small">
-              Ningún archivo es almacenado. El análisis se ejecuta localmente.
-            </span>
-          </p>
+  Este prototipo clasifica archivos para determinar si corresponden a 
+  <b> ransomware o a software benigno</b>.
+  <br /><br />
+  Al cargar el archivo, el sistema mostrará el resultado de la clasificación,
+  el nivel de confianza asignado, las características que más influyeron en la
+  decisión y un resumen técnico del resultado obtenido.
+</p>
+
 
           {/* LOADING */}
           {loading && <p className="loading">Analizando archivo...</p>}
