@@ -71,7 +71,7 @@ export default function Upload() {
       {/* MOSTRAR LOADER SI NO HAY RESULTADO */}
       {!result && (
         <>
-          <h1 className="main-title">Análisis de Archivos para Detección de Ransomware</h1>
+          <h1 className="main-title">Clasificador de archivos Ransomware y benignos</h1>
 
           <p className="upload-subtitle">
             Haz clic aquí para subir tu archivo en formato CSV.
