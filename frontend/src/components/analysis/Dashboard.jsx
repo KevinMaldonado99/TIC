@@ -34,11 +34,10 @@ export default function Dashboard({ data }) {
   const benignColor = "#1E90FF";
   const trojanColor = "#B100FF";
 
-  const riskColors = {
-    Bajo: "#64ebe5",
-    Medio: "orange",
-    Alto: "red",
-  };
+  // 🔒 Riesgo forzado por clase (regla final)
+  const riesgoFinal = clase_dominante === "Trojan" ? "Alto" : "Bajo";
+
+  const riesgoColor = clase_dominante === "Trojan" ? "#ff4d4d" : "#64ebe5";
 
   return (
     <div className="dashboard-container">
@@ -55,14 +54,13 @@ export default function Dashboard({ data }) {
             RESULTADO DEL ANÁLISIS
           </h2>
 
-<span
-  className={`result-label ${
-    clase_dominante === "Trojan" ? "label-trojan" : "label-benign"
-  }`}
->
-  {clase_dominante}
-</span>
-
+          <span
+            className={`result-label ${
+              clase_dominante === "Trojan" ? "label-trojan" : "label-benign"
+            }`}
+          >
+            {clase_dominante}
+          </span>
 
           <Gauge value={gaugeValue} clase={clase_dominante} />
 
@@ -85,9 +83,7 @@ export default function Dashboard({ data }) {
 
           <p className="risk-label">
             <b>Nivel de Riesgo:</b>{" "}
-            <span style={{ color: riskColors[nivel_riesgo] }}>
-              {nivel_riesgo}
-            </span>
+            <span style={{ color: riesgoColor }}>{riesgoFinal}</span>
           </p>
 
           <div className="risk-bar">
@@ -96,9 +92,9 @@ export default function Dashboard({ data }) {
               style={{
                 width: `${gaugeValue}%`,
                 background:
-                  nivel_riesgo === "Alto"
-                    ? "linear-gradient(90deg, #000000 0%, #bbbbbb 40%, #B100FF 100%)"
-                    : "linear-gradient(90deg, #000000 0%, #e0e0e0 40%, #64ebe5 100%)",
+                  clase_dominante === "Trojan"
+                    ? "linear-gradient(90deg, #000000 0%, #bfbfbf 45%, #B100FF 100%)"
+                    : "linear-gradient(90deg, #000000 0%, #bfbfbf 45%, #64EBE5 100%)",
               }}
             ></div>
           </div>
@@ -209,7 +205,7 @@ export default function Dashboard({ data }) {
               <tr>
                 <td>Modelo:</td>
                 <td>RandomForest</td>
-              </tr> 
+              </tr>
 
               <tr>
                 <td>Clasificación:</td>
