@@ -24,7 +24,7 @@ float fbm(vec2 p){
     float v = 0.0;
     float a = 0.5;
     vec2 shift = vec2(1.0, 2.0);
-    for(int i = 0; i < 5; i++){
+    for(int i = 0; i < 4; i++){
         v += a * sin(p.x + sin(p.y));
         p = p * 2.0 + shift;
         a *= 0.5;
@@ -36,49 +36,44 @@ void main() {
   vec2 uv = gl_FragCoord.xy / uResolution.xy;
   uv = uv * 2.0 - 1.0;
 
-  // ---- CENTRAR & POSICIONAR ----
-  uv.x = uv.x * 0.1 * (uResolution.x / uResolution.y); //para ensanchar o reducer el ancho bajar = 0.1
-  //
-  uv.y *= 0.8;
+  // ---- POSICIONAMIENTO SUAVE ----
+  uv.x *= 0.12 * (uResolution.x / uResolution.y);
+  uv.y *= 1.9;
+  uv.y -= 0.64; //arriba
 
-  uv.x -= 0.1;   // mover derecha 
-  uv.y -= 0.08;   // mover arriba
-
-  // --- NEBULOSA PRINCIPAL ---
-  float base = wave(uv, 2.0, 3.0, 0.0)
-             + wave(uv, 3.0, 4.0, 1.3)
-             + wave(uv, 1.7, 2.5, 2.8);
+  // --- BASE DE ONDAS ---
+  float base = wave(uv, 1.8, 2.5, 0.0)
+             + wave(uv, 1.1, 3.5, 1.4)
+             + wave(uv, 0.6, 2.0, 2.6);
 
   base /= 3.0;
 
-  // ---- ONDAS ORGÁNICAS ESTILO AURORA ----
-  float halo = fbm(uv * 3.0 + uTime * 0.2);
+  // ---- HALO ORGÁNICO MUY SUAVE ----
+  float halo = fbm(uv * 2.5 + uTime * 0.15);
 
-  // Bordes suaves, NO círculo perfecto:
   float dist = length(uv);
-  float edgeGlow = smoothstep(0.4, 0.1, dist) * halo;
+  float edgeGlow = smoothstep(0.5, 0.15, dist) * halo;
 
-  // ==== PALETA DE COLORES ====
-  vec3 coreBlue = vec3(0.0, 0.0, 1.0);
-  vec3 deepBlue = vec3(0.0, 0.0, 0.3);
+  // ==== NUEVA PALETA DE COLORES (AZUL / TEAL) ====
+  vec3 deepNavy   = vec3(0.02, 0.06, 0.12);  // azul petróleo
+  vec3 deepBlue   = vec3(0.05, 0.18, 0.35);  // azul profundo
+  vec3 tealAccent = vec3(0.10, 0.55, 0.55);  // teal frío
+  vec3 cyanSoft   = vec3(0.45, 0.80, 0.85);  // cyan suave
 
-  // Halo rosado eléctrico como Vanta Halo
-  vec3 electricPink = vec3(1.0, 0.1, 0.7);
+  // Mezcla base
+  vec3 color = mix(deepNavy, deepBlue, base);
 
-  // Mezclar colores
-  vec3 color = mix(deepBlue, coreBlue, base);
-
-  // Añadir halo rosado dinámico
-  color += electricPink * edgeGlow * 0.8;
+  // Halo teal/cyan MUY sutil
+  color += tealAccent * edgeGlow * 0.4;
+  color += cyanSoft * edgeGlow * 0.15;
 
   // Viñeta natural
-  float vignette = smoothstep(1.2, 0.2, dist);
+  float vignette = smoothstep(1.3, 0.3, dist);
   color *= vignette;
 
   gl_FragColor = vec4(color, 1.0);
 }
 `;
-
 
 export default function DarkVeil() {
   const canvasRef = useRef();
@@ -98,9 +93,9 @@ export default function DarkVeil() {
       position: {
         size: 2,
         data: new Float32Array([
-          -1, -1,   
-          1, -1,    
-          -1, 1     // SOLO HASTA ARRIBA, NO VA MÁS ABAJO
+          -1, -1,
+          3, -1,
+          -1, 3,
         ]),
       },
     });

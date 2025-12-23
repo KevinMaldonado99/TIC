@@ -1,38 +1,22 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Dashboard from "./Dashboard";
+import Dropzone from "./Dropzone";
 import "./upload.css";
 
 export default function Upload() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);   // ⭐ NUEVO
-  const fileInputRef = useRef(null);
-
-  // =============================
-  // FUNCIÓN PRINCIPAL
-  // =============================
-  const handleFileSelection = (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    setErrorMsg(null); // limpiar error anterior
-    sendToBackend(file);
-  };
-
-  // =============================
-  // CLICK EN EL LOADER → ABRIR EXPLORADOR
-  // =============================
-  const triggerFilePicker = () => {
-    if (!loading) fileInputRef.current.click();
-  };
+  const [errorMsg, setErrorMsg] = useState(null);
 
   // =============================
   // ENVIAR ARCHIVO AL BACKEND
   // =============================
   const sendToBackend = async (file) => {
+    if (!file) return;
+
     setLoading(true);
-    setErrorMsg(null); // limpiar errores previos
+    setErrorMsg(null);
 
     const formData = new FormData();
     formData.append("dataset", file);
@@ -43,20 +27,14 @@ export default function Upload() {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      // Si el backend devolvió status=error igualmente cae en catch
       setResult(res.data);
     } catch (error) {
       console.error(error);
 
-      // ⭐ Caso 1: error controlado del backend
-      if (error.response && error.response.data && error.response.data.message) {
-        setErrorMsg(error.response.data.message);
-      }
-      // ⭐ Caso 2: error de red / servidor
-      else {
-        setErrorMsg("Ocurrió un error inesperado procesando el archivo.");
-      }
+      setErrorMsg(
+        error.response?.data?.message ||
+        "Ocurrió un error inesperado procesando el archivo."
+      );
     }
 
     setLoading(false);
@@ -68,51 +46,50 @@ export default function Upload() {
   return (
     <div className="upload-container">
 
-      {/* MOSTRAR LOADER SI NO HAY RESULTADO */}
       {!result && (
         <>
+<<<<<<< HEAD
           <h1 className="main-title">Clasificador de archivos Ransomware y benignos</h1>
+=======
+          <h1 className="main-title">
+            Clasificador de archivos: ransomware y benignos
+          </h1>
+>>>>>>> dc19d9249fc5b9f931a8c497a37fa963d8233967
 
           <p className="upload-subtitle">
-            Haz clic aquí para subir tu archivo en formato CSV.
+            Haz clic o arrastra tu archivo en formato CSV.
           </p>
 
-          {/* === LOADER INTERACTIVO === */}
-          <div className="scan-loader" onClick={triggerFilePicker}>
-            <div className="scan-inner-circle"></div>
-            <div className="scan-outer-circle"></div>
-            <div className="scan-arrow">↑</div>
-          </div>
-
-          {/* INPUT OCULTO */}
-          <input
-            type="file"
-            accept=".csv"
-            ref={fileInputRef}
-            onChange={handleFileSelection}
-            style={{ display: "none" }}
+          {/* 🔹 TARJETA DRAG & DROP */}
+          <Dropzone
+            onFileSelected={sendToBackend}
+            disabled={loading}
           />
 
-          {/* DESCRIPCIÓN */}
-          <p className="upload-description">
-  Este prototipo clasifica archivos para determinar si corresponden a 
-  <b> ransomware o a software benigno</b>.
-  <br /><br />
-  Al cargar el archivo, el sistema mostrará el resultado de la clasificación,
-  el nivel de confianza asignado, las características que más influyeron en la
-  decisión y un resumen técnico del resultado obtenido.
-</p>
+          {/* 🔹 ESTADO DE PROCESO */}
+          {loading && (
+            <p className="loading">
+              Analizando archivo…
+            </p>
+          )}
 
-
-          {/* LOADING */}
-          {loading && <p className="loading">Analizando archivo...</p>}
-
-          {/* ⭐ MENSAJE DE ERROR */}
+          {/* 🔹 MENSAJE DE ERROR */}
           {errorMsg && (
             <div className="error-box">
               ⚠ {errorMsg}
             </div>
           )}
+
+          {/* 🔹 DESCRIPCIÓN */}
+          <p className="upload-description">
+            Este prototipo clasifica archivos para determinar si corresponden a
+            <b> ransomware</b> o a <b>software benigno</b>.
+            <br /><br />
+            Al cargar el archivo, el sistema mostrará el resultado de la
+            clasificación, el nivel de confianza asignado, las características
+            que más influyeron en la decisión y un resumen técnico del análisis
+            realizado.
+          </p>
         </>
       )}
 
