@@ -20,8 +20,19 @@ CORS(app)
 
 
 # CARGA DE MODELOS CON LOS ARCHIVOS PKL
-MODEL_PATH = "../app/models/Pkls/modelo_RF_Under_Troyano.pkl"
-ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_Under_Troyano.pkl"
+#MODEL_PATH = "../app/models/Pkls/modelo_RF_Under_Troyano.pkl"
+#ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_Under_Troyano.pkl"
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(
+    BASE_DIR, "models", "Pkls", "modelo_RF_Under_Troyano.pkl"
+)
+
+ENCODER_PATH = os.path.join(
+    BASE_DIR, "models", "Pkls", "label_encoder_RF_Under_Troyano.pkl"
+)
+
 
 
 
