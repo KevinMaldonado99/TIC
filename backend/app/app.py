@@ -18,9 +18,8 @@ warnings.filterwarnings("ignore")
 app = Flask(__name__)
 CORS(app)
 
-# ================================
-# CARGA DE MODELOS
-# ================================
+
+# CARGA DE MODELOS CON LOS ARCHIVOS PKL
 MODEL_PATH = "../app/models/Pkls/modelo_RF_Under_Troyano.pkl"
 ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_Under_Troyano.pkl"
 
@@ -139,9 +138,8 @@ def predict():
         else 0.0
     )
 
-    # ======================================================
+   
     # ================ TOP FEATURES ========================
-    # ======================================================
     importances = model.feature_importances_
     valores_medios = X.mean().values
     ajuste = importances * valores_medios
@@ -154,8 +152,6 @@ def predict():
     }
     for i in indices
     ]
-
-
     total_features = len(columnas_modelo)
     top_features_json = json.dumps(top_features)
 

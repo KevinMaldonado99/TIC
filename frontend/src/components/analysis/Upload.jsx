@@ -102,7 +102,6 @@ export default function Upload() {
             calculará el nivel de riesgo y mostrará un reporte técnico detallado.
             <br /><br />
             <span className="desc-small">
-              Ningún archivo es almacenado. El análisis se ejecuta localmente.
             </span>
           </p>
 
