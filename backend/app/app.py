@@ -20,9 +20,18 @@ CORS(app)
 
 
 #**** CARGA DEL MODELO Y EL CODIFICADOR EN FORMATO PKL ****
-MODEL_PATH = "../app/models/Pkls/modelo_RF_SMOTE.pkl"
+#MODEL_PATH = "../app/models/Pkls/modelo_RF_SMOTE.pkl"
+#ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_SMOTE.pkl"
 
-ENCODER_PATH = "../app/models/Pkls/label_encoder_RF_SMOTE.pkl"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+MODEL_PATH = os.path.join(
+    BASE_DIR, "models", "Pkls", "modelo_RF_SMOTE.pkl"
+)
+
+ENCODER_PATH = os.path.join(
+    BASE_DIR, "models", "Pkls", "label_encoder_RF_SMOTE.pkl"
+)
 
 
 
