@@ -48,13 +48,7 @@ export default function Upload() {
 
       {!result && (
         <>
-<<<<<<< HEAD
           <h1 className="main-title">Clasificador de archivos Ransomware y benignos</h1>
-=======
-          <h1 className="main-title">
-            Clasificador de archivos: ransomware y benignos
-          </h1>
->>>>>>> dc19d9249fc5b9f931a8c497a37fa963d8233967
 
           <p className="upload-subtitle">
             Haz clic o arrastra tu archivo en formato CSV.
