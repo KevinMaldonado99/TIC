@@ -20,7 +20,7 @@ uploads/
 *.csv
 
 # Modelos pesados (opcional)
-*.pkl
+#*.pkl
 
 # Jupyter
 .ipynb_checkpoints/
