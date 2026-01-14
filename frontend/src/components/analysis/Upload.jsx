@@ -3,6 +3,7 @@ import axios from "axios";
 import Dashboard from "./Dashboard";
 import Dropzone from "./Dropzone";
 import "./upload.css";
+const API_URL_R = import.meta.env.VITE_API_URL_R;
 
 export default function Upload() {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ export default function Upload() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/predict",
+        `${API_URL_R}/api/predict`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
