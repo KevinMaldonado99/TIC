@@ -3,7 +3,7 @@ import axios from "axios";
 import Dashboard from "./Dashboard";
 import Dropzone from "./Dropzone";
 import "./upload.css";
-const API_URL_R = import.meta.env.VITE_API_URL_R;
+const API_URL_R = import.meta.env.VITE_API_URL;
 
 export default function Upload() {
   const [loading, setLoading] = useState(false);
