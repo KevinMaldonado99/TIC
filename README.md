@@ -58,7 +58,7 @@ Con el backend y frontend ejecutándose:
 5. El sistema realizará automáticamente:
   - Validación estricta de que el CSV tenga exactamente las 75 columnas del modelo.
   - Conversión y verificación de tipos numéricos.
-  - Clasificación (Benign vs Trojan o Benign vs Ransomware según la rama).
+  - Clasificación (Benign vs Ransomware).
   - Cálculo de confianza promedio.
   - Nivel de riesgo (Alto / Medio / Bajo).
   - Análisis forense (hashes, tiempo de análisis, top features).
@@ -68,7 +68,7 @@ Con el backend y frontend ejecutándose:
 ### 🔍 5.1 Detalles importantes
 
 - Cada rama contiene modelos distintos (`.pkl`) y archivos ajustados al tipo de malware.
-- El frontend reconoce automáticamente si el resultado proviene de un modelo **Trojan** o **Ransomware**, ya que proviene del backend.
+- El frontend reconoce automáticamente si el resultado proviene de un modelo  **Ransomware**, ya que proviene del backend.
 - El backend valida estrictamente que el CSV tenga las **75 columnas reales del modelo**.
 
 ## 🧠 6 . Explicación del modelo y entrenamiento
@@ -88,8 +88,7 @@ El flujo de entrenamiento fue:
 1. **Extracción de características** con un script estático → genera CSV con ~75 columnas.
 2. **Limpieza, normalización y verificación**.
 3. Entrenamiento de:
-   - Modelo 1: **Trojan vs Benign**
-   - Modelo 2: **Ransomware vs Benign**
+   - Modelo 1: **Ransomware vs Benign**
 4. Validación cruzada (cross-validation)
 5. Exportación del modelo con pickle.
 
