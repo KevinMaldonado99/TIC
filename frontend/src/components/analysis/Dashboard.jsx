@@ -243,7 +243,8 @@ export default function Dashboard({ data }) {
                   : "0 0 18px rgba(30, 144, 255, 0.7)",
             }}
             onClick={() =>
-              window.open(`http://localhost:5000${reporte_url}`, "_blank")
+              /*window.open(`http://localhost:5000${reporte_url}`, "_blank")*/
+                window.open(`${import.meta.env.VITE_API_URL}${reporte_url}`, "_blank")
             }
           >
             🖨️ Generar Reporte PDF
