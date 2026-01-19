@@ -16,7 +16,7 @@ Puedes ejecutar cualquiera de las variantes simplemente **cambiando de rama**.
 
 ## 📥 1. Clonar el repositorio
 
-git clone https://github.com/EstherZumba/TIC.git
+git clone https://github.com/KevinMaldonado99/TIC.git
 
 ## 2 Cambiar de rama:
 git checkout Trojan-Final
