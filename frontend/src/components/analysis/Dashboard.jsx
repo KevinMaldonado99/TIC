@@ -242,10 +242,18 @@ export default function Dashboard({ data }) {
                   ? "0 0 18px rgba(177, 0, 255, 0.7)"
                   : "0 0 18px rgba(30, 144, 255, 0.7)",
             }}
-            onClick={() =>
-              /*window.open(`http://localhost:5000${reporte_url}`, "_blank")*/
-                window.open(`${import.meta.env.VITE_API_URL}${reporte_url}`, "_blank")
-            }
+            onClick={() => {
+              // Fuerza que sea solo ruta relativa
+              const relativeUrl = reporte_url.startsWith("/report")
+                ? reporte_url
+                : new URL(reporte_url).pathname + new URL(reporte_url).search;
+
+              // Abre con tu backend en Render
+              window.open(
+                `${import.meta.env.VITE_API_URL}${relativeUrl}`,
+                "_blank",
+              );
+            }}
           >
             🖨️ Generar Reporte PDF
           </button>
