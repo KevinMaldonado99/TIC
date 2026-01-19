@@ -5,7 +5,6 @@ Sistema de análisis estático basado en Machine Learning para clasificar archiv
 Este proyecto incluye:
 
 - 🧠 Modelos entrenados para:
-  - **Trojan vs Benign**
   - **Ransomware vs Benign**
 - 🌐 Backend en **Flask**
 - 💻 Frontend en **React + Vite**
