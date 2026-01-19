@@ -122,10 +122,6 @@ El sistema genera un **reporte forense** con:
 - Información técnica del dataset  
 
 
-El PDF **no requiere bases de datos** y **no guarda información**.
-
-### 🧪 Interfaz de carga
-<img width="1528" height="769" alt="imagen" src="https://github.com/user-attachments/assets/322bd373-f030-4b5a-a773-09a53e0cfe38" />
 
 
 
