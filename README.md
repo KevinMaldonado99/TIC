@@ -1,12 +1,11 @@
-# 🧬 TIC – Malware Classifier (Trojan / Ransomware vs Benign)
+# 🧬 TIC – Malware Classifier (Trojan vs Benign)
 
-Sistema de análisis estático basado en Machine Learning para clasificar archivos PE en categorías de **Malware** (Trojan o Ransomware, según la rama seleccionada) y **Benignos**.
+Sistema de análisis estático basado en Machine Learning para clasificar archivos PE en categorías de **Malware** (Trojan, según la rama seleccionada) y **Benignos**.
 
 Este proyecto incluye:
 
 - 🧠 Modelos entrenados para:
   - **Trojan vs Benign**
-  - **Ransomware vs Benign**
 - 🌐 Backend en **Flask**
 - 💻 Frontend en **React + Vite**
 - 📊 Reportes dinámicos y análisis forense
@@ -17,12 +16,11 @@ Puedes ejecutar cualquiera de las variantes simplemente **cambiando de rama**.
 
 ## 📥 1. Clonar el repositorio
 
-git clone https://github.com/EstherZumba/TIC.git
+git clone https://github.com/KevinMaldonado99/TIC.git
 
 ## 2 Cambiar de rama:
 git checkout Trojan-Final
-o
-git checkout Ransomware-Final
+
 
 ## 3 Configurar y ejecutar el Backend (Flask)
 cd backend
@@ -59,7 +57,7 @@ Con el backend y frontend ejecutándose:
 5. El sistema realizará automáticamente:
   - Validación estricta de que el CSV tenga exactamente las 75 columnas del modelo.
   - Conversión y verificación de tipos numéricos.
-  - Clasificación (Benign vs Trojan o Benign vs Ransomware según la rama).
+  - Clasificación (Benign vs Trojan).
   - Cálculo de confianza promedio.
   - Nivel de riesgo (Alto / Medio / Bajo).
   - Análisis forense (hashes, tiempo de análisis, top features).
@@ -69,7 +67,7 @@ Con el backend y frontend ejecutándose:
 ### 🔍 5.1 Detalles importantes
 
 - Cada rama contiene modelos distintos (`.pkl`) y archivos ajustados al tipo de malware.
-- El frontend reconoce automáticamente si el resultado proviene de un modelo **Trojan** o **Ransomware**, ya que proviene del backend.
+- El frontend reconoce automáticamente si el resultado proviene de un modelo **Trojan** , ya que proviene del backend.
 - El backend valida estrictamente que el CSV tenga las **75 columnas reales del modelo**.
 
 ## 🧠 6 . Explicación del modelo y entrenamiento
@@ -90,7 +88,6 @@ El flujo de entrenamiento fue:
 2. **Limpieza, normalización y verificación**.
 3. Entrenamiento de:
    - Modelo 1: **Trojan vs Benign**
-   - Modelo 2: **Ransomware vs Benign**
 4. Validación cruzada (cross-validation)
 5. Exportación del modelo con pickle.
 
