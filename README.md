@@ -1,6 +1,6 @@
-#  TIC – Malware Classifier ( Ransomware vs Benign)
+#  TIC – Malware Classifier ( MULTICLASS)
 
-Sistema de análisis estático basado en Machine Learning para clasificar archivos  de   **M**.
+Sistema de análisis estático basado en Machine Learning para clasificar archivos  de   **MULTICLASS**.
 
 Este proyecto incluye:
 
