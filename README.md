@@ -1,17 +1,17 @@
 #  TIC – Malware Classifier ( Ransomware vs Benign)
 
-Sistema de análisis estático basado en Machine Learning para clasificar archivos  de   **Ransomware** y **Benignos**.
+Sistema de análisis estático basado en Machine Learning para clasificar archivos  de   **M**.
 
 Este proyecto incluye:
 
 - 🧠 Modelos entrenados para:
-  - **Ransomware vs Benign**
+  - **MULTICLASS**
 - 🌐 Backend en **Flask**
 - 💻 Frontend en **React + Vite**
 - 📊 Reportes dinámicos y análisis forense
 - 🔐 Validación estricta de estructura del CSV (75 características exactas)
 
-Puedes ejecutar cualquiera de las variantes simplemente **cambiando de rama**.
+Puedes ejecutar cualquiera de las variantes simplemente **MULTICLASS**.
 
 
 ## 📥 1. Clonar el repositorio
@@ -19,9 +19,7 @@ Puedes ejecutar cualquiera de las variantes simplemente **cambiando de rama**.
 git clone https://github.com/EstherZumba/TIC.git
 
 ## 2 Cambiar de rama:
-git checkout Trojan-Final
-o
-git checkout Ransomware-Final
+git checkout MULTICLASS
 
 ## 3 Configurar y ejecutar el Backend (Flask)
 cd backend
