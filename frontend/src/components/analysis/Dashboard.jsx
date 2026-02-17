@@ -16,8 +16,12 @@ export default function Dashboard({ data }) {
   const gaugeValue = confianza;
 
   // 🎨 PALETA FINAL
-  const benignColor = "#6FA8FF";
-  const ransomwareColor = "#7C89D6";
+  const classColors = {
+    Ransomware: "#E55353",  // rojo
+    Trojan: "#FF9900",      // naranja
+    Benign: "#5BC8B1",      // verde/teal
+  };
+
 
   const riskColors = {
     Bajo: "#5BC8B1",
@@ -35,22 +39,12 @@ export default function Dashboard({ data }) {
 
         {/* PANEL GAUGE */}
         <div className="panel panel-gauge">
-          <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware"
-                ? "Ransomware-title"
-                : "benign-title"
-            }`}
-          >
-            RESULTADO DEL ANÁLISIS
-          </h2>
+        <h2 className={`section-title ${clase_dominante}-title`}>
+          RESULTADO DEL ANÁLISIS
+        </h2>
 
           <span
-            className={`result-label ${
-              clase_dominante === "Ransomware"
-                ? "label-Ransomware"
-                : "label-benign"
-            }`}
+          className={`result-label label-${clase_dominante}`}
           >
             {clase_dominante}
           </span>
@@ -83,11 +77,8 @@ export default function Dashboard({ data }) {
         {/* PANEL FICHA TÉCNICA (AHORA ARRIBA) */}
         <div className="panel panel-model">
           <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware"
-                ? "Ransomware-title"
-                : "benign-title"
-            }`}
+          className={`section-title ${clase_dominante}-title`}
+
           >
             FICHA TÉCNICA DEL ANÁLISIS Y DEL MODELO
           </h2>
@@ -115,10 +106,7 @@ export default function Dashboard({ data }) {
                 <td>
                   <span
                     style={{
-                      color:
-                        clase_dominante === "Ransomware"
-                          ? ransomwareColor
-                          : benignColor,
+                      color: classColors[clase_dominante],
                       fontWeight: "bold",
                     }}
                   >
@@ -137,11 +125,8 @@ export default function Dashboard({ data }) {
       <div className="row-bottom">
         <div className="panel panel-features centered-panel">
           <h2
-            className={`section-title ${
-              clase_dominante === "Ransomware"
-                ? "Ransomware-title"
-                : "benign-title"
-            }`}
+          className={`section-title ${clase_dominante}-title`}
+
           >
             TOP CARACTERÍSTICAS INFLUYENTES
           </h2>
@@ -156,10 +141,7 @@ export default function Dashboard({ data }) {
                     className="bar-fill"
                     style={{
                       width: `${f.importancia}%`,
-                      background:
-                        clase_dominante === "Ransomware"
-                          ? ransomwareColor
-                          : benignColor,
+                      background: classColors[clase_dominante],
                     }}
                   ></div>
                 </div>

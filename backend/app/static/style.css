@@ -142,6 +142,11 @@ li {
   background: linear-gradient(90deg, #ff3333, #ff6600, #00cc66);
 }
 
+.risk-gradient.trojan {
+  background: linear-gradient(90deg, #ff9900, #ffcc00, #ff3333);
+}
+
+
 /* Colores de texto según riesgo */
 .high { color: #ff4d4d; font-weight: bold; }
 .medium { color: #ffa500; font-weight: bold; }

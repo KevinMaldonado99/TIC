@@ -320,33 +320,57 @@
 }
 
 .section-title.Ransomware-title {
-  color: #D6D9F2;   /* violeta azulado suave */
+  color: #D6D9F2;
 }
 
-.section-title.benign-title {
-  color: #CFE1FF;   /* azul frío */
+.section-title.Trojan-title {
+  color: #FFD6A3;  /* naranja suave elegante */
 }
+
+.section-title.Benign-title {
+  color: #CFE1FF;
+}
+
 
 /* ===== LABEL RESULTADO ===== */
 .label-Ransomware {
   background: #3F4C7A;
   color: #E6EAF0;
-  box-shadow: none;
 }
 
-.label-benign {
+.label-Trojan {
+  background: #8A4F00;   /* naranja oscuro elegante */
+  color: #E6EAF0;
+}
+
+.label-Benign {
   background: #2E5FA7;
   color: #E6EAF0;
-  box-shadow: none;
 }
 
-/* ===== GAUGE ===== */
+/* ===== GAUGE ===== *
 .gauge-Ransomware svg {
   stroke: #7C89D6;
 }
 
 .gauge-benign svg {
   stroke: #6FA8FF;
+}
+/
+/* =====================
+   GAUGE MULTICLASE
+===================== */
+
+.gauge-Ransomware {
+  filter: drop-shadow(0 0 8px rgba(229,83,83,0.4));
+}
+
+.gauge-Trojan {
+  filter: drop-shadow(0 0 8px rgba(255,153,0,0.4));
+}
+
+.gauge-Benign {
+  filter: drop-shadow(0 0 8px rgba(91,200,177,0.4));
 }
 
 /* ===== BARRAS FEATURES ===== */

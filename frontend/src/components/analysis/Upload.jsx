@@ -49,10 +49,10 @@ export default function Upload() {
 
       {!result && (
         <>
-          <h1 className="main-title">Clasificador de archivos Ransomware y benignos</h1>
+          <h1 className="main-title"> Clasificador Multiclase de Malware</h1>
 
           <p className="upload-subtitle">
-            Haz clic o arrastra tu archivo en formato CSV.
+          Haz clic o arrastra tu archivo CSV para realizar el análisis multiclase.
           </p>
 
           {/* 🔹 TARJETA DRAG & DROP */}
@@ -77,8 +77,9 @@ export default function Upload() {
 
           {/* 🔹 DESCRIPCIÓN */}
           <p className="upload-description">
-            Este prototipo clasifica archivos para determinar si corresponden a
-            <b> ransomware</b> o a <b>software benigno</b>.
+          Este prototipo clasifica archivos para determinar si corresponden a
+          <b> Ransomware</b>, <b>Trojan</b> o <b>software benigno</b>.
+            
             <br /><br />
             Al cargar el archivo, el sistema mostrará el resultado de la
             clasificación, el nivel de confianza asignado, las características

@@ -26,11 +26,11 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 MODEL_PATH = os.path.join(
-    BASE_DIR, "models", "Pkls", "modelo_RF_SMOTE.pkl"
+    BASE_DIR, "models", "Pkls", "modelo_MULTICLASS_SMOTE.pkl"
 )
 
 ENCODER_PATH = os.path.join(
-    BASE_DIR, "models", "Pkls", "label_encoder_RF_SMOTE.pkl"
+    BASE_DIR, "models", "Pkls", "label_encoder_MULTICLASS_SMOTE.pkl"
 )
 
 
@@ -81,7 +81,7 @@ def predict():
                 return jsonify({
                     "status": "error",
                     "message": f"El archivo no contiene la columna requerida: '{col}'. "
-                            "Por favor sube un CSV válido del dominio Benign/Ransomware."
+                            "Por favor sube un CSV válido."
                 }), 400
 
         # 2. Extraer únicamente las columnas necesarias
@@ -125,7 +125,7 @@ def predict():
     if confianza_promedio < 75:
         return jsonify({
             "status": "error",
-            "message": "El archivo no pertenece al dominio del modelo (Benign/Ransomware). "
+            "message": "El archivo no pertenece al dominio del modelo (Benign/Ransomware/Trojan). "
                     "La confianza es demasiado baja para generar un resultado confiable.",
             "confianza": confianza_promedio
         }), 400
@@ -139,12 +139,7 @@ def predict():
 
     precision = round(confianza_promedio, 2)
 
-    if clase_dominante == "Ransomware":
-        positivos = sum([1 for c in y_pred_labels if c == "Ransomware"])
-    elif clase_dominante == "Benign":
-        positivos = sum([1 for c in y_pred_labels if c == "Benign"])
-    else:
-        positivos = 0
+    positivos = sum([1 for c in y_pred_labels if c == clase_dominante])
 
     recall = round((positivos / total_preds) * 100, 2) if total_preds > 0 else 0
 
@@ -154,7 +149,14 @@ def predict():
         else 0.0
     )
 
-   
+        # ===== NIVEL DE RIESGO MULTICLASE =====
+    if clase_dominante == "Ransomware":
+        nivel_riesgo = "Crítico"
+    elif clase_dominante == "Trojan":
+        nivel_riesgo = "Alto"
+    else:
+        nivel_riesgo = "Bajo"
+
     # ================ TOP FEATURES ========================
 
     importances = model.feature_importances_
@@ -213,7 +215,8 @@ def predict():
         file_size=file_size,
         file_hash_md5=file_hash_md5,
         file_hash_sha256=file_hash_sha256,
-        reporte_url=reporte_url
+        reporte_url=reporte_url,
+        nivel_riesgo=nivel_riesgo   # ← ESTA LÍNEA NUEVA
     )
 
 
@@ -298,7 +301,7 @@ def api_predict():
     if confianza_promedio < 75:
         return jsonify({
             "status": "error",
-            "message": "El archivo no pertenece al dominio del modelo (Benign/Ransomware). "
+            "message": "El archivo no pertenece al dominio del modelo (Benign/Ransomware/Trojan). "
                     "La confianza es demasiado baja para generar un resultado confiable.",
             "confianza": confianza_promedio
         }), 400
@@ -312,12 +315,7 @@ def api_predict():
 
     precision = round(confianza_promedio, 2)
 
-    if clase_dominante == "Ransomware":
-        positivos = sum([1 for c in y_pred_labels if c == "Ransomware"])
-    elif clase_dominante == "Benign":
-        positivos = sum([1 for c in y_pred_labels if c == "Benign"])
-    else:
-        positivos = 0
+    positivos = sum([1 for c in y_pred_labels if c == clase_dominante])
 
     recall = round((positivos / total_preds) * 100, 2) if total_preds > 0 else 0
 
@@ -326,6 +324,14 @@ def api_predict():
         if (precision + recall) > 0
         else 0.0
     )
+
+        # ===== NIVEL DE RIESGO MULTICLASE =====
+    if clase_dominante == "Ransomware":
+        nivel_riesgo = "Crítico"
+    elif clase_dominante == "Trojan":
+        nivel_riesgo = "Alto"
+    else:
+        nivel_riesgo = "Bajo"
 
     # === TOP FEATURES ===
     importances = model.feature_importances_
@@ -369,19 +375,12 @@ def api_predict():
     return jsonify({
         "clase_dominante": clase_dominante,
         "confianza": confianza_promedio,
-
         "precision": precision,
         "recall": recall,
         "f1_score": f1_score,
-
         "resultado_porcentajes": porcentajes.to_dict(),
-
-        "nivel_riesgo": (
-            "Alto" if clase_dominante == "Ransomware" and confianza_promedio >= 90 else
-            "Medio" if clase_dominante == "Ransomware" and confianza_promedio >= 70 else
-            "Bajo"
-        ),
-
+        "nivel_riesgo": nivel_riesgo,
+        
         # PANEL FORENSE 1
         "file_name": file_name,
         "file_hash": file_hash,

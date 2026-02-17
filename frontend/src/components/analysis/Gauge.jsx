@@ -2,25 +2,29 @@ import GaugeComponent from "react-gauge-component";
 
 export default function Gauge({ value, clase }) {
 
-  // 🎨 PALETA FINAL (alineada al background)
-  const benignColor = "#6FA8FF";      // azul frío
-  const benignLight = "#A9C8FF";      // azul claro
+  // 🎨 Paleta Multiclase
+  const classPalette = {
+    Ransomware: {
+      base: "#E55353",      // rojo
+      light: "#F5A3A3",
+      wrapper: "gauge-Ransomware"
+    },
+    Trojan: {
+      base: "#FF9900",      // naranja
+      light: "#FFD199",
+      wrapper: "gauge-Trojan"
+    },
+    Benign: {
+      base: "#5BC8B1",      // verde
+      light: "#A5E4D8",
+      wrapper: "gauge-Benign"
+    }
+  };
 
-  const ransomwareColor = "#7C89D6";  // violeta azulado
-  const ransomwareLight = "#B4BCEB";  // violeta claro
-
-  const baseColor =
-    clase === "Ransomware" ? ransomwareColor : benignColor;
-
-  const lightColor =
-    clase === "Ransomware" ? ransomwareLight : benignLight;
+  const current = classPalette[clase] || classPalette["Benign"];
 
   return (
-    <div
-      className={`gauge-wrapper ${
-        clase === "Ransomware" ? "gauge-Ransomware" : "gauge-benign"
-      }`}
-    >
+    <div className={`gauge-wrapper ${current.wrapper}`}>
       <GaugeComponent
         value={value}
         minValue={0}
@@ -30,15 +34,15 @@ export default function Gauge({ value, clase }) {
         arc={{
           width: 0.15,
           padding: 0.02,
-          colorArray: [lightColor, baseColor],
+          colorArray: [current.light, current.base],
           subArcs: [
-            { limit: value, color: baseColor },
+            { limit: value, color: current.base },
             { limit: 100, color: "rgba(255,255,255,0.15)" }
           ],
         }}
 
         pointer={{
-          color: baseColor,
+          color: current.base,
           length: 0.7,
           width: 8,
         }}
