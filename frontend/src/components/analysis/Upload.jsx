@@ -52,7 +52,7 @@ export default function Upload() {
           <h1 className="main-title"> Clasificador Multiclase de Malware</h1>
 
           <p className="upload-subtitle">
-          Haz clic o arrastra tu archivo CSV para realizar el análisis multiclase.
+          Carga tu archivo CSV para realizar el análisis multiclase.
           </p>
 
           {/* 🔹 TARJETA DRAG & DROP */}

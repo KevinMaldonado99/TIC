@@ -17,11 +17,10 @@ export default function Dashboard({ data }) {
 
   // 🎨 PALETA FINAL
   const classColors = {
-    Ransomware: "#E55353",  // rojo
-    Trojan: "#FF9900",      // naranja
-    Benign: "#5BC8B1",      // verde/teal
+    Ransomware: "#E55353", // rojo
+    Trojan: "#FF9900", // naranja
+    Benign: "#5BC8B1", // verde/teal
   };
-
 
   const riskColors = {
     Bajo: "#5BC8B1",
@@ -31,21 +30,17 @@ export default function Dashboard({ data }) {
 
   return (
     <div className="dashboard-container">
-
       {/* =============================
           FILA 1 — GAUGE + FICHA TÉCNICA
       ============================== */}
       <div className="row-top">
-
         {/* PANEL GAUGE */}
         <div className="panel panel-gauge">
-        <h2 className={`section-title ${clase_dominante}-title`}>
-          RESULTADO DEL ANÁLISIS
-        </h2>
+          <h2 className={`section-title ${clase_dominante}-title`}>
+            RESULTADO DEL ANÁLISIS
+          </h2>
 
-          <span
-          className={`result-label label-${clase_dominante}`}
-          >
+          <span className={`result-label label-${clase_dominante}`}>
             {clase_dominante}
           </span>
 
@@ -63,12 +58,12 @@ export default function Dashboard({ data }) {
               className="risk-fill"
               style={{
                 width: `${gaugeValue}%`,
-                background:
-                  nivel_riesgo === "Alto"
-                    ? "linear-gradient(90deg, #0A1322 0%, #3A4A6A 50%, #E55353 100%)"
-                    : nivel_riesgo === "Medio"
-                    ? "linear-gradient(90deg, #0A1322 0%, #3A4A6A 50%, #E6B35C 100%)"
-                    : "linear-gradient(90deg, #0A1322 0%, #3A4A6A 50%, #5BC8B1 100%)",
+                background: `linear-gradient(
+                  90deg,
+                  #0A1322 0%,
+                  #3A4A6A 50%,
+                  ${classColors[clase_dominante]} 100%
+                )`,
               }}
             ></div>
           </div>
@@ -76,10 +71,7 @@ export default function Dashboard({ data }) {
 
         {/* PANEL FICHA TÉCNICA (AHORA ARRIBA) */}
         <div className="panel panel-model">
-          <h2
-          className={`section-title ${clase_dominante}-title`}
-
-          >
+          <h2 className={`section-title ${clase_dominante}-title`}>
             FICHA TÉCNICA DEL ANÁLISIS Y DEL MODELO
           </h2>
 
@@ -95,7 +87,7 @@ export default function Dashboard({ data }) {
               </tr>
               <tr>
                 <td>Modelo:</td>
-                <td>{dataset_version}</td>
+                <td>Random Forest</td>
               </tr>
               <tr>
                 <td>Tiempo:</td>
@@ -124,10 +116,7 @@ export default function Dashboard({ data }) {
       ============================== */}
       <div className="row-bottom">
         <div className="panel panel-features centered-panel">
-          <h2
-          className={`section-title ${clase_dominante}-title`}
-
-          >
+          <h2 className={`section-title ${clase_dominante}-title`}>
             TOP CARACTERÍSTICAS INFLUYENTES
           </h2>
 
@@ -152,7 +141,6 @@ export default function Dashboard({ data }) {
           </ul>
         </div>
       </div>
-
     </div>
   );
 }
