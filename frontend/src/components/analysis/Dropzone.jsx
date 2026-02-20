@@ -39,7 +39,7 @@ export default function Dropzone({ onFileSelected, disabled }) {
         <div className="text-5xl">📄</div>
 
         <p className="text-xl font-semibold">
-          Arrastra tu archivo CSV o haz clic para cargarlo
+          Selecciona tu archivo CSV o haz clic para cargarlo
         </p>
 
         <p className="text-sm opacity-70">
